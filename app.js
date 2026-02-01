@@ -3,125 +3,125 @@
  */
 // Available categories
 const CATEGORIES = [
-    'Entertainment', 'Software', 'Lifestyle', 'Utilities', 'Auto',
-    'Health', 'Finance', 'Education', 'Food', 'Shopping', 'Other'
+  'Entertainment', 'Software', 'Lifestyle', 'Utilities', 'Auto',
+  'Health', 'Finance', 'Education', 'Food', 'Shopping', 'Other'
 ];
 
 const CATEGORY_MAP = {
-    en: {
-        'Entertainment': 'Entertainment', 'Software': 'Software', 'Lifestyle': 'Lifestyle',
-        'Utilities': 'Utilities', 'Auto': 'Auto', 'Health': 'Health',
-        'Finance': 'Finance', 'Education': 'Education', 'Food': 'Food',
-        'Shopping': 'Shopping', 'Other': 'Other'
-    },
-    es: {
-        'Entertainment': 'Entretenimiento', 'Software': 'Software', 'Lifestyle': 'Estilo de vida',
-        'Utilities': 'Servicios', 'Auto': 'Automóvil', 'Health': 'Salud',
-        'Finance': 'Finanzas', 'Education': 'Educación', 'Food': 'Comida',
-        'Shopping': 'Compras', 'Other': 'Otro'
-    }
+  en: {
+    'Entertainment': 'Entertainment', 'Software': 'Software', 'Lifestyle': 'Lifestyle',
+    'Utilities': 'Utilities', 'Auto': 'Auto', 'Health': 'Health',
+    'Finance': 'Finance', 'Education': 'Education', 'Food': 'Food',
+    'Shopping': 'Shopping', 'Other': 'Other'
+  },
+  es: {
+    'Entertainment': 'Entretenimiento', 'Software': 'Software', 'Lifestyle': 'Estilo de vida',
+    'Utilities': 'Servicios', 'Auto': 'Automóvil', 'Health': 'Salud',
+    'Finance': 'Finanzas', 'Education': 'Educación', 'Food': 'Comida',
+    'Shopping': 'Compras', 'Other': 'Otro'
+  }
 };
 
 // Currency options
 const CURRENCIES = {
-    USD: { symbol: '$', name: 'US Dollar' },
-    MXN: { symbol: '$', name: 'Mexican Peso', suffix: ' MXN' },
-    GBP: { symbol: '£', name: 'British Pound' },
-    EUR: { symbol: '€', name: 'Euro' }
+  USD: { symbol: '$', name: 'US Dollar' },
+  MXN: { symbol: '$', name: 'Mexican Peso', suffix: ' MXN' },
+  GBP: { symbol: '£', name: 'British Pound' },
+  EUR: { symbol: '€', name: 'Euro' }
 };
 
 const BRAND_COLORS = {
-    'netflix': '#E50914',
-    'spotify': '#1DB954',
-    'apple': '#555555',
-    'icloud': '#007AFF',
-    'disney': '#006E99',
-    'youtube': '#FF0000',
-    'adobe': '#FF021B',
-    'amazon': '#FF9900',
-    'slack': '#4A154B',
-    'figma': '#F24E1E',
-    'zoom': '#2D8CFF',
-    'google': '#4285F4',
-    'microsoft': '#00A4EF',
-    'hulu': '#1CE783',
-    'hbo': '#151515',
-    'paramount': '#0064FF',
-    'crunchyroll': '#F47521'
+  'netflix': '#E50914',
+  'spotify': '#1DB954',
+  'apple': '#555555',
+  'icloud': '#007AFF',
+  'disney': '#006E99',
+  'youtube': '#FF0000',
+  'adobe': '#FF021B',
+  'amazon': '#FF9900',
+  'slack': '#4A154B',
+  'figma': '#F24E1E',
+  'zoom': '#2D8CFF',
+  'google': '#4285F4',
+  'microsoft': '#00A4EF',
+  'hulu': '#1CE783',
+  'hbo': '#151515',
+  'paramount': '#0064FF',
+  'crunchyroll': '#F47521'
 };
 
 let state = {
-    user: JSON.parse(localStorage.getItem('user')) || {
-        name: "Alex Thompson",
-        email: "alex.t@premium.com",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
-        isPremium: true,
-        biometricEnabled: false
-    },
-    preferences: JSON.parse(localStorage.getItem('preferences')) || {
-        currency: 'USD',
-        notificationsEnabled: false,
-        language: 'en',
-        theme: 'dark',
-        reminderDaysBefore: 1
-    },
-    subscriptions: JSON.parse(localStorage.getItem('subscriptions')) || [
-        { id: 1, name: 'Netflix', price: 15.99, currency: 'USD', category: 'Entertainment', billingDay: 5, billingCycle: 'monthly', startDate: '2020-03-01', icon: 'N', color: '#E50914' },
-        { id: 2, name: 'Spotify', price: 9.99, currency: 'GBP', category: 'Entertainment', billingDay: 15, billingCycle: 'monthly', startDate: '2019-06-15', icon: 'S', color: '#1DB954' },
-        { id: 3, name: 'iCloud+', price: 9.99, currency: 'USD', category: 'Software', billingDay: 12, billingCycle: 'monthly', startDate: '2021-01-12', icon: 'C', color: '#007AFF' },
-        { id: 4, name: 'Adobe CC', price: 52.99, currency: 'EUR', category: 'Software', billingDay: 22, billingCycle: 'monthly', startDate: '2022-09-01', icon: 'Ai', color: '#FF0000' },
-        { id: 5, name: 'YouTube Premium', price: 13.99, currency: 'USD', category: 'Entertainment', billingDay: 28, billingCycle: 'monthly', startDate: '2023-02-28', icon: 'Y', color: '#FF0000' }
-    ],
-    notifications: JSON.parse(localStorage.getItem('notifications')) || [
-        { id: Date.now(), title: "Welcome to Bills!", body: "Tap to clear this notification. Swiping simulated.", icon: "star" },
-        { id: Date.now() + 1, title: "Currency Rates Updated", body: "We've fetched the latest rates for USD, MXN, GBP, and EUR.", icon: "refresh-cw" }
-    ],
-    exchangeRates: JSON.parse(localStorage.getItem('exchangeRates')) || { USD: 1, MXN: 17.5, GBP: 0.79, EUR: 0.92 },
-    currentScreen: 'home',
-    isLocked: false,
-    selectedPreset: null
+  user: JSON.parse(localStorage.getItem('user')) || {
+    name: "Alex Thompson",
+    email: "alex.t@premium.com",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
+    isPremium: true,
+    biometricEnabled: false
+  },
+  preferences: JSON.parse(localStorage.getItem('preferences')) || {
+    currency: 'USD',
+    notificationsEnabled: false,
+    language: 'en',
+    theme: 'dark',
+    reminderDaysBefore: 1
+  },
+  subscriptions: JSON.parse(localStorage.getItem('subscriptions')) || [
+    { id: 1, name: 'Netflix', price: 15.99, currency: 'USD', category: 'Entertainment', billingDay: 5, billingCycle: 'monthly', startDate: '2020-03-01', icon: 'N', color: '#E50914' },
+    { id: 2, name: 'Spotify', price: 9.99, currency: 'GBP', category: 'Entertainment', billingDay: 15, billingCycle: 'monthly', startDate: '2019-06-15', icon: 'S', color: '#1DB954' },
+    { id: 3, name: 'iCloud+', price: 9.99, currency: 'USD', category: 'Software', billingDay: 12, billingCycle: 'monthly', startDate: '2021-01-12', icon: 'C', color: '#007AFF' },
+    { id: 4, name: 'Adobe CC', price: 52.99, currency: 'EUR', category: 'Software', billingDay: 22, billingCycle: 'monthly', startDate: '2022-09-01', icon: 'Ai', color: '#FF0000' },
+    { id: 5, name: 'YouTube Premium', price: 13.99, currency: 'USD', category: 'Entertainment', billingDay: 28, billingCycle: 'monthly', startDate: '2023-02-28', icon: 'Y', color: '#FF0000' }
+  ],
+  notifications: JSON.parse(localStorage.getItem('notifications')) || [
+    { id: Date.now(), title: "Welcome to Bills!", body: "Tap to clear this notification. Swiping simulated.", icon: "star" },
+    { id: Date.now() + 1, title: "Currency Rates Updated", body: "We've fetched the latest rates for USD, MXN, GBP, and EUR.", icon: "refresh-cw" }
+  ],
+  exchangeRates: JSON.parse(localStorage.getItem('exchangeRates')) || { USD: 1, MXN: 17.5, GBP: 0.79, EUR: 0.92 },
+  currentScreen: 'home',
+  isLocked: false,
+  selectedPreset: null
 };
 
 // Auto-lock if biometric enabled
 if (state.user.biometricEnabled) {
-    state.isLocked = true;
+  state.isLocked = true;
 }
 
 // PWA Install Detection
 const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
-    window.navigator.standalone ||
-    document.referrer.includes('android-app://');
+  window.navigator.standalone ||
+  document.referrer.includes('android-app://');
 
 let deferredPrompt;
 
 // Capture the beforeinstallprompt event (Chrome, Edge, Samsung Internet)
 window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
+  e.preventDefault();
+  deferredPrompt = e;
 
-    // Show install banner if not already installed
-    if (!isPWA && !localStorage.getItem('installBannerDismissed')) {
-        showInstallBanner();
-    }
+  // Show install banner if not already installed
+  if (!isPWA && !localStorage.getItem('installBannerDismissed')) {
+    showInstallBanner();
+  }
 });
 
 // For mobile devices (especially iOS which doesn't support beforeinstallprompt)
 window.addEventListener('load', () => {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    if (isMobile && !isPWA && !localStorage.getItem('installBannerDismissed')) {
-        // Wait 2 seconds for page to load, then show banner
-        setTimeout(() => {
-            showInstallBanner();
-        }, 2000);
-    }
+  if (isMobile && !isPWA && !localStorage.getItem('installBannerDismissed')) {
+    // Wait 2 seconds for page to load, then show banner
+    setTimeout(() => {
+      showInstallBanner();
+    }, 2000);
+  }
 });
 
 // Show install banner
 const showInstallBanner = () => {
-    const banner = document.createElement('div');
-    banner.id = 'install-banner';
-    banner.innerHTML = `
+  const banner = document.createElement('div');
+  banner.id = 'install-banner';
+  banner.innerHTML = `
         <div style="background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; padding: 16px 20px; display: flex; align-items: center; gap: 16px; position: fixed; bottom: 80px; left: 16px; right: 16px; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); z-index: 1000; animation: slideUp 0.3s ease">
             <div style="width: 48px; height: 48px; background: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
                 <i data-lucide="download" style="color: #2563eb; width: 24px; height: 24px"></i>
@@ -137,34 +137,34 @@ const showInstallBanner = () => {
         </div>
     `;
 
-    document.body.appendChild(banner);
-    if (window.lucide) lucide.createIcons();
+  document.body.appendChild(banner);
+  if (window.lucide) lucide.createIcons();
 
-    // Install button click
-    document.getElementById('install-btn').addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User response: ${outcome}`);
-            deferredPrompt = null;
-        } else {
-            // Show iOS instructions
-            showIOSInstructions();
-        }
-        banner.remove();
-    });
+  // Install button click
+  document.getElementById('install-btn').addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`User response: ${outcome}`);
+      deferredPrompt = null;
+    } else {
+      // Show iOS instructions
+      showIOSInstructions();
+    }
+    banner.remove();
+  });
 
-    // Dismiss button
-    document.getElementById('dismiss-banner').addEventListener('click', () => {
-        localStorage.setItem('installBannerDismissed', 'true');
-        banner.remove();
-    });
+  // Dismiss button
+  document.getElementById('dismiss-banner').addEventListener('click', () => {
+    localStorage.setItem('installBannerDismissed', 'true');
+    banner.remove();
+  });
 };
 
 // iOS install instructions
 const showIOSInstructions = () => {
-    const modal = document.createElement('div');
-    modal.innerHTML = `
+  const modal = document.createElement('div');
+  modal.innerHTML = `
         <div style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px">
             <div style="background: var(--card-bg); border-radius: 24px; padding: 32px; max-width: 400px; text-align: center">
                 <h3 style="font-family: var(--font-heading); margin: 0 0 16px 0">Install on iOS</h3>
@@ -173,50 +173,50 @@ const showIOSInstructions = () => {
             </div>
         </div>
     `;
-    document.body.appendChild(modal);
-    if (window.lucide) lucide.createIcons();
+  document.body.appendChild(modal);
+  if (window.lucide) lucide.createIcons();
 };
 
 // Helper to get service logo or letter icon
 const getServiceLogoHTML = (name, color, icon, size = 44) => {
-    const serviceLogos = {
-        'netflix': 'netflix.png',
-        'spotify': 'spotify.png',
-        'icloud': 'icloud.png',
-        'disney': 'disney.png',
-        'amazon': 'amazon.png',
-        'adobe': 'adobe.png',
-        'youtube': 'youtube.png',
-        'slack': 'slack.png'
-    };
+  const serviceLogos = {
+    'netflix': 'netflix.png',
+    'spotify': 'spotify.png',
+    'icloud': 'icloud.png',
+    'disney': 'disney.png',
+    'amazon': 'amazon.png',
+    'adobe': 'adobe.png',
+    'youtube': 'youtube.png',
+    'slack': 'slack.png'
+  };
 
-    const lowerName = name.toLowerCase();
-    let logoFile = null;
+  const lowerName = name.toLowerCase();
+  let logoFile = null;
 
-    // Check for specific matches
-    if (lowerName.includes('netflix')) {
-        logoFile = serviceLogos['netflix'];
-    } else if (lowerName.includes('spotify')) {
-        logoFile = serviceLogos['spotify'];
-    } else if (lowerName.includes('icloud')) {
-        logoFile = serviceLogos['icloud'];
-    } else if (lowerName.includes('disney')) {
-        logoFile = serviceLogos['disney'];
-    } else if (lowerName.includes('amazon')) {
-        logoFile = serviceLogos['amazon'];
-    } else if (lowerName.includes('adobe')) {
-        logoFile = serviceLogos['adobe'];
-    } else if (lowerName.includes('youtube')) {
-        logoFile = serviceLogos['youtube'];
-    } else if (lowerName.includes('slack')) {
-        logoFile = serviceLogos['slack'];
-    }
+  // Check for specific matches
+  if (lowerName.includes('netflix')) {
+    logoFile = serviceLogos['netflix'];
+  } else if (lowerName.includes('spotify')) {
+    logoFile = serviceLogos['spotify'];
+  } else if (lowerName.includes('icloud')) {
+    logoFile = serviceLogos['icloud'];
+  } else if (lowerName.includes('disney')) {
+    logoFile = serviceLogos['disney'];
+  } else if (lowerName.includes('amazon')) {
+    logoFile = serviceLogos['amazon'];
+  } else if (lowerName.includes('adobe')) {
+    logoFile = serviceLogos['adobe'];
+  } else if (lowerName.includes('youtube')) {
+    logoFile = serviceLogos['youtube'];
+  } else if (lowerName.includes('slack')) {
+    logoFile = serviceLogos['slack'];
+  }
 
-    if (logoFile) {
-        return `<div style="width: ${size}px; height: ${size}px; background-image: url('${logoFile}'); background-size: cover; background-position: center; border-radius: ${size / 4}px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15)"></div>`;
-    }
+  if (logoFile) {
+    return `<div style="width: ${size}px; height: ${size}px; background-image: url('${logoFile}'); background-size: cover; background-position: center; border-radius: ${size / 4}px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15)"></div>`;
+  }
 
-    return `
+  return `
     <div class="service-icon" style="background: ${color}; width: ${size}px; height: ${size}px; border-radius: ${size / 4}px; flex-shrink: 0; display: flex; align-items: center; justify-content: center">
       <span style="font-weight:bold; color:white; font-size: ${size / 2.5}px">${icon || name.charAt(0).toUpperCase()}</span>
     </div>
@@ -225,435 +225,445 @@ const getServiceLogoHTML = (name, color, icon, size = 44) => {
 
 // Format price based on currency preference and convert if needed
 const convertCurrency = (amount, from, to) => {
-    const fromRate = state.exchangeRates[from] || 1;
-    const toRate = state.exchangeRates[to] || 1;
-    return (amount / fromRate) * toRate;
+  const fromRate = state.exchangeRates[from] || 1;
+  const toRate = state.exchangeRates[to] || 1;
+  return (amount / fromRate) * toRate;
 };
 
 const formatPrice = (price, fromCurrency = null) => {
-    const toCurrency = state.preferences.currency;
-    let finalPrice = price;
+  const toCurrency = state.preferences.currency;
+  let finalPrice = price;
 
-    if (fromCurrency && fromCurrency !== toCurrency) {
-        finalPrice = convertCurrency(price, fromCurrency, toCurrency);
-    }
+  if (fromCurrency && fromCurrency !== toCurrency) {
+    finalPrice = convertCurrency(price, fromCurrency, toCurrency);
+  }
 
-    const curr = CURRENCIES[toCurrency] || CURRENCIES.USD;
-    const formatted = parseFloat(finalPrice).toFixed(2);
-    return curr.suffix ? `${curr.symbol}${formatted}${curr.suffix}` : `${curr.symbol}${formatted}`;
+  const curr = CURRENCIES[toCurrency] || CURRENCIES.USD;
+  const formatted = parseFloat(finalPrice).toFixed(2);
+  return curr.suffix ? `${curr.symbol}${formatted}${curr.suffix}` : `${curr.symbol}${formatted}`;
 };
 
 const notifyUser = (title, body, icon = 'bell') => {
-    // In-app notification
-    state.notifications.unshift({
-        id: Date.now(),
-        title,
-        body,
-        icon,
-        timestamp: new Date().toISOString()
-    });
-    saveState();
+  // In-app notification
+  state.notifications.unshift({
+    id: Date.now(),
+    title,
+    body,
+    icon,
+    timestamp: new Date().toISOString()
+  });
+  saveState();
 
-    // System notification
-    showLocalNotification(title, body);
+  // System notification
+  showLocalNotification(title, body);
 
-    // Refresh UI if on home
-    if (state.currentScreen === 'home') render();
+  // Refresh UI if on home
+  if (state.currentScreen === 'home') render();
 };
 
 // Format notification time (e.g., "2 minutes ago", "1 hour ago")
 const formatNotificationTime = (timestamp) => {
-    if (!timestamp) return '';
+  if (!timestamp) return '';
 
-    const now = new Date();
-    const notifTime = new Date(timestamp);
-    const diffMs = now - notifTime;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
+  const now = new Date();
+  const notifTime = new Date(timestamp);
+  const diffMs = now - notifTime;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 1) return 'Just now';
-    if (diffMins === 1) return '1 minute ago';
-    if (diffMins < 60) return `${diffMins} minutes ago`;
-    if (diffHours === 1) return '1 hour ago';
-    if (diffHours < 24) return `${diffHours} hours ago`;
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffMins < 1) return 'Just now';
+  if (diffMins === 1) return '1 minute ago';
+  if (diffMins < 60) return `${diffMins} minutes ago`;
+  if (diffHours === 1) return '1 hour ago';
+  if (diffHours < 24) return `${diffHours} hours ago`;
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays} days ago`;
 
-    // For older notifications, show the date
-    return notifTime.toLocaleDateString();
+  // For older notifications, show the date
+  return notifTime.toLocaleDateString();
 };
 
 const fetchExchangeRates = async () => {
-    try {
-        const res = await fetch('https://open.er-api.com/v6/latest/USD');
-        const data = await res.json();
-        if (data.rates) {
-            state.exchangeRates = data.rates;
-            saveState();
-        }
-    } catch (e) {
-        console.warn('Currency API failed, using cached rates');
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/USD');
+    const data = await res.json();
+    if (data.rates) {
+      state.exchangeRates = data.rates;
+      saveState();
     }
+  } catch (e) {
+    console.warn('Currency API failed, using cached rates');
+  }
 };
 
 const TRANSLATIONS = {
-    en: {
-        welcomeBack: "Welcome back",
-        totalSpend: "Total Monthly Spend",
-        upcomingBills: "Upcoming Bills",
-        seeAll: "SEE ALL",
-        categoryBreakdown: "Category Breakdown",
-        viewInsights: "View Spending Insights",
-        activeServices: "Active Services",
-        analytics: "Analytics",
-        avgService: "Avg/Service",
-        yearlyCost: "Yearly Cost",
-        spendingByCategory: "Spending by Category",
-        topSubscriptions: "Top Subscriptions",
-        accountSettings: "Account Settings",
-        securityPrivacy: "Security & Privacy",
-        notifications: "Notifications",
-        billReminders: "Bill Reminders",
-        preferences: "Preferences",
-        currency: "Currency",
-        language: "Language",
-        appTheme: "App Theme",
-        darkMode: "Dark Mode",
-        lightMode: "Light Mode",
-        seeAll: "See all",
-        recentActivity: "Recent Activity",
-        addSub: "Add Subscription",
-        subscriptionAdded: "Subscription Added",
-        subscriptionDeleted: "Subscription Deleted",
-        subscriptionUpdated: "Subscription Updated",
-        popularServices: "Popular Services",
-        customService: "Add Custom Service",
-        newService: "New Service",
-        serviceName: "Service Name",
-        price: "Price",
-        billingCycle: "Billing Cycle",
-        billingDay: "Billing Day of Month",
-        nextDue: "Next Due Date",
-        reminderInterval: "Remind me",
-        dayBefore: "{n} day before",
-        daysBefore: "{n} days before",
-        weekBefore: "1 week before",
-        startedOn: "Started On",
-        saveChanges: "Save Changes",
-        deleteSub: "Delete",
-        backupData: "Backup & Restore",
-        exportData: "Export Data",
-        importData: "Import Data",
-        copyCode: "Copy this code and save it somewhere safe.",
-        pasteCode: "Paste your backup code here to restore your data.",
-        invalidCode: "Invalid backup code.",
-        dataRestored: "Data Restored!",
-        optional: "optional",
-        category: "Category",
-        accentColor: "Accent Color",
-        saveChanges: "Save Changes",
-        deleteSub: "Delete Subscription",
-        confirmDelete: "Are you sure you want to delete {name}?",
-        lifetimeSpend: "Estimated Lifetime Spend",
-        status: "Status",
-        active: "Active",
-        en: "English",
-        es: "Español",
-        enabled: "Enabled",
-        disabled: "Disabled",
-        months: "months",
-        years: "years",
-        weeks: "weeks",
-        dueToday: "Due today",
-        dueTomorrow: "Due tomorrow",
-        dueInDays: "Due in {n} days",
-        overdue: "Overdue",
-        noDueDate: "No due date",
-        search: "Search"
-    },
-    es: {
-        welcomeBack: "Bienvenido de nuevo",
-        totalSpend: "Gasto Mensual Total",
-        upcomingBills: "Próximas Facturas",
-        seeAll: "VER TODO",
-        categoryBreakdown: "Desglose por Categoría",
-        viewInsights: "Ver Análisis de Gastos",
-        activeServices: "Servicios Activos",
-        analytics: "Análisis",
-        avgService: "Promedio/Servicio",
-        yearlyCost: "Costo Anual",
-        spendingByCategory: "Gasto por Categoría",
-        topSubscriptions: "Top Suscripciones",
-        accountSettings: "Ajustes de Cuenta",
-        securityPrivacy: "Seguridad y Privacidad",
-        notifications: "Notificaciones",
-        billReminders: "Recordatorios de Facturas",
-        preferences: "Preferencias",
-        currency: "Moneda",
-        language: "Idioma",
-        appTheme: "Tema de la App",
-        darkMode: "Modo Oscuro",
-        lightMode: "Modo Claro",
-        seeAll: "Ver todo",
-        recentActivity: "Actividad Reciente",
-        addSub: "Añadir suscripción",
-        subscriptionAdded: "Suscripción añadida",
-        subscriptionDeleted: "Suscripción eliminada",
-        subscriptionUpdated: "Suscripción actualizada",
-        popularServices: "Servicios populares",
-        customService: "Añadir Servicio Personalizado",
-        newService: "Nuevo Servicio",
-        serviceName: "Nombre del Servicio",
-        price: "Precio",
-        billingCycle: "Ciclo de Facturación",
-        billingDay: "Día de Facturación",
-        nextDue: "Próximo Vencimiento",
-        reminderInterval: "Recordarme",
-        dayBefore: "{n} día antes",
-        daysBefore: "{n} días antes",
-        weekBefore: "1 semana antes",
-        startedOn: "Fecha de inicio",
-        optional: "opcional",
-        category: "Categoría",
-        accentColor: "Color de Acento",
-        saveChanges: "Guardar cambios",
-        deleteSub: "Eliminar",
-        backupData: "Respaldar y Restaurar",
-        exportData: "Exportar Datos",
-        importData: "Importar Datos",
-        copyCode: "Copia este código y guárdalo en un lugar seguro.",
-        pasteCode: "Pega tu código de respaldo aquí para restaurar tus datos.",
-        invalidCode: "Código de respaldo inválido.",
-        dataRestored: "¡Datos Restaurados!",
-        confirmDelete: "¿Estás seguro de que quieres eliminar {name}?",
-        lifetimeSpend: "Gasto Total Estimado",
-        status: "Estado",
-        active: "Activo",
-        en: "English",
-        es: "Español",
-        enabled: "Activado",
-        disabled: "Desactivado",
-        months: "meses",
-        years: "años",
-        weeks: "semanas",
-        dueToday: "Vence hoy",
-        dueTomorrow: "Vence mañana",
-        dueInDays: "Vence en {n} días",
-        overdue: "Vencido",
-        noDueDate: "Sin fecha de vencimiento",
-        search: "Buscar"
-    }
+  en: {
+    welcomeBack: "Welcome back",
+    totalSpend: "Total Monthly Spend",
+    upcomingBills: "Upcoming Bills",
+    seeAll: "SEE ALL",
+    categoryBreakdown: "Category Breakdown",
+    viewInsights: "View Spending Insights",
+    activeServices: "Active Services",
+    analytics: "Analytics",
+    avgService: "Avg/Service",
+    yearlyCost: "Yearly Cost",
+    spendingByCategory: "Spending by Category",
+    topSubscriptions: "Top Subscriptions",
+    accountSettings: "Account Settings",
+    securityPrivacy: "Security & Privacy",
+    notifications: "Notifications",
+    billReminders: "Bill Reminders",
+    preferences: "Preferences",
+    currency: "Currency",
+    language: "Language",
+    appTheme: "App Theme",
+    darkMode: "Dark Mode",
+    lightMode: "Light Mode",
+    seeAll: "See all",
+    recentActivity: "Recent Activity",
+    addSub: "Add Subscription",
+    subscriptionAdded: "Subscription Added",
+    subscriptionDeleted: "Subscription Deleted",
+    subscriptionUpdated: "Subscription Updated",
+    popularServices: "Popular Services",
+    customService: "Add Custom Service",
+    newService: "New Service",
+    serviceName: "Service Name",
+    price: "Price",
+    billingCycle: "Billing Cycle",
+    billingDay: "Billing Day of Month",
+    nextDue: "Next Due Date",
+    reminderInterval: "Remind me",
+    dayBefore: "{n} day before",
+    daysBefore: "{n} days before",
+    weekBefore: "1 week before",
+    startedOn: "Started On",
+    saveChanges: "Save Changes",
+    deleteSub: "Delete",
+    backupData: "Backup & Restore",
+    exportData: "Export Data",
+    importData: "Import Data",
+    copyCode: "Copy this code and save it somewhere safe.",
+    pasteCode: "Paste your backup code here to restore your data.",
+    invalidCode: "Invalid backup code.",
+    dataRestored: "Data Restored!",
+    optional: "optional",
+    category: "Category",
+    accentColor: "Accent Color",
+    saveChanges: "Save Changes",
+    deleteSub: "Delete Subscription",
+    confirmDelete: "Are you sure you want to delete {name}?",
+    lifetimeSpend: "Estimated Lifetime Spend",
+    status: "Status",
+    active: "Active",
+    en: "English",
+    es: "Español",
+    enabled: "Enabled",
+    disabled: "Disabled",
+    months: "months",
+    years: "years",
+    weeks: "weeks",
+    dueToday: "Due today",
+    dueTomorrow: "Due tomorrow",
+    dueInDays: "Due in {n} days",
+    overdue: "Overdue",
+    noDueDate: "No due date",
+    search: "Search"
+  },
+  es: {
+    welcomeBack: "Bienvenido de nuevo",
+    totalSpend: "Gasto Mensual Total",
+    upcomingBills: "Próximas Facturas",
+    seeAll: "VER TODO",
+    categoryBreakdown: "Desglose por Categoría",
+    viewInsights: "Ver Análisis de Gastos",
+    activeServices: "Servicios Activos",
+    analytics: "Análisis",
+    avgService: "Promedio/Servicio",
+    yearlyCost: "Costo Anual",
+    spendingByCategory: "Gasto por Categoría",
+    topSubscriptions: "Top Suscripciones",
+    accountSettings: "Ajustes de Cuenta",
+    securityPrivacy: "Seguridad y Privacidad",
+    notifications: "Notificaciones",
+    billReminders: "Recordatorios de Facturas",
+    preferences: "Preferencias",
+    currency: "Moneda",
+    language: "Idioma",
+    appTheme: "Tema de la App",
+    darkMode: "Modo Oscuro",
+    lightMode: "Modo Claro",
+    seeAll: "Ver todo",
+    recentActivity: "Actividad Reciente",
+    addSub: "Añadir suscripción",
+    subscriptionAdded: "Suscripción añadida",
+    subscriptionDeleted: "Suscripción eliminada",
+    subscriptionUpdated: "Suscripción actualizada",
+    popularServices: "Servicios populares",
+    customService: "Añadir Servicio Personalizado",
+    newService: "Nuevo Servicio",
+    serviceName: "Nombre del Servicio",
+    price: "Precio",
+    billingCycle: "Ciclo de Facturación",
+    billingDay: "Día de Facturación",
+    nextDue: "Próximo Vencimiento",
+    reminderInterval: "Recordarme",
+    dayBefore: "{n} día antes",
+    daysBefore: "{n} días antes",
+    weekBefore: "1 semana antes",
+    startedOn: "Fecha de inicio",
+    optional: "opcional",
+    category: "Categoría",
+    accentColor: "Color de Acento",
+    saveChanges: "Guardar cambios",
+    deleteSub: "Eliminar",
+    backupData: "Respaldar y Restaurar",
+    exportData: "Exportar Datos",
+    importData: "Importar Datos",
+    copyCode: "Copia este código y guárdalo en un lugar seguro.",
+    pasteCode: "Pega tu código de respaldo aquí para restaurar tus datos.",
+    invalidCode: "Código de respaldo inválido.",
+    dataRestored: "¡Datos Restaurados!",
+    confirmDelete: "¿Estás seguro de que quieres eliminar {name}?",
+    lifetimeSpend: "Gasto Total Estimado",
+    status: "Estado",
+    active: "Activo",
+    en: "English",
+    es: "Español",
+    enabled: "Activado",
+    disabled: "Desactivado",
+    months: "meses",
+    years: "años",
+    weeks: "semanas",
+    dueToday: "Vence hoy",
+    dueTomorrow: "Vence mañana",
+    dueInDays: "Vence en {n} días",
+    overdue: "Vencido",
+    noDueDate: "Sin fecha de vencimiento",
+    search: "Buscar"
+  }
 };
 
 const t = (key, params = {}) => {
-    const lang = state.preferences.language || 'en';
-    let text = TRANSLATIONS[lang][key] || key;
-    Object.keys(params).forEach(p => {
-        text = text.replace(`{${p}}`, params[p]);
-    });
-    return text;
+  const lang = state.preferences.language || 'en';
+  let text = TRANSLATIONS[lang][key] || key;
+  Object.keys(params).forEach(p => {
+    text = text.replace(`{${p}}`, params[p]);
+  });
+  return text;
 };
 
 // Get next due date based on billing day (for monthly subscriptions)
 const getNextDueDate = (billingDay, billingCycle = 'monthly') => {
-    const today = new Date();
-    let nextDue = new Date();
+  const today = new Date();
+  let nextDue = new Date();
 
-    if (billingCycle === 'monthly') {
-        // Use billing day (1-31)
-        const day = parseInt(billingDay) || 1;
-        nextDue.setDate(day);
+  if (billingCycle === 'monthly') {
+    // Use billing day (1-31)
+    const day = parseInt(billingDay) || 1;
+    nextDue.setDate(day);
 
-        // If this month's billing day has passed, move to next month
-        if (nextDue <= today) {
-            nextDue.setMonth(nextDue.getMonth() + 1);
-        }
-
-        // Handle months with fewer days
-        const maxDays = new Date(nextDue.getFullYear(), nextDue.getMonth() + 1, 0).getDate();
-        if (day > maxDays) {
-            nextDue.setDate(maxDays);
-        }
-    } else if (billingCycle === 'yearly') {
-        // For yearly, billingDay should be a full date string
-        nextDue = new Date(billingDay);
-        if (nextDue <= today) {
-            nextDue.setFullYear(nextDue.getFullYear() + 1);
-        }
-    } else if (billingCycle === 'weekly') {
-        // billingDay is day of week (0-6, 0=Sunday)
-        const dayOfWeek = parseInt(billingDay) || 0;
-        const daysUntil = (dayOfWeek - today.getDay() + 7) % 7 || 7;
-        nextDue.setDate(today.getDate() + daysUntil);
+    // If this month's billing day has passed, move to next month
+    if (nextDue <= today) {
+      nextDue.setMonth(nextDue.getMonth() + 1);
     }
 
-    return nextDue;
+    // Handle months with fewer days
+    const maxDays = new Date(nextDue.getFullYear(), nextDue.getMonth() + 1, 0).getDate();
+    if (day > maxDays) {
+      nextDue.setDate(maxDays);
+    }
+  } else if (billingCycle === 'yearly') {
+    // For yearly, billingDay should be a full date string
+    nextDue = new Date(billingDay);
+    if (nextDue <= today) {
+      nextDue.setFullYear(nextDue.getFullYear() + 1);
+    }
+  } else if (billingCycle === 'weekly') {
+    // billingDay is day of week (0-6, 0=Sunday)
+    const dayOfWeek = parseInt(billingDay) || 0;
+    const daysUntil = (dayOfWeek - today.getDay() + 7) % 7 || 7;
+    nextDue.setDate(today.getDate() + daysUntil);
+  }
+
+  return nextDue;
 };
 
 // Format due date to show days remaining
 const formatDueDate = (sub) => {
-    if (!sub.billingDay && !sub.dueDate) return 'No due date';
+  if (!sub.billingDay && !sub.dueDate) return 'No due date';
 
-    let dueDate;
-    if (sub.billingCycle === 'monthly' && sub.billingDay) {
-        dueDate = getNextDueDate(sub.billingDay, 'monthly');
-    } else if (sub.dueDate) {
-        dueDate = new Date(sub.dueDate);
-    } else {
-        return 'No due date';
-    }
+  let dueDate;
+  if (sub.billingCycle === 'monthly' && sub.billingDay) {
+    dueDate = getNextDueDate(sub.billingDay, 'monthly');
+  } else if (sub.dueDate) {
+    dueDate = new Date(sub.dueDate);
+  } else {
+    return 'No due date';
+  }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    dueDate.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  dueDate.setHours(0, 0, 0, 0);
 
-    const diffTime = dueDate - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const diffTime = dueDate - today;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffDays < 0) return t('overdue');
-    if (diffDays === 0) return t('dueToday');
-    if (diffDays === 1) return t('dueTomorrow');
-    if (diffDays <= 7) return t('dueInDays', { n: diffDays });
+  if (diffDays < 0) return t('overdue');
+  if (diffDays === 0) return t('dueToday');
+  if (diffDays === 1) return t('dueTomorrow');
+  if (diffDays <= 7) return t('dueInDays', { n: diffDays });
 
-    // Format as readable date
-    return dueDate.toLocaleDateString(state.preferences.language === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric' });
+  // Format as readable date
+  return dueDate.toLocaleDateString(state.preferences.language === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric' });
+};
+
+// Get relative due date (e.g., "In 2 days", "Tomorrow", "Today")
+const getRelativeDueDate = (sub) => {
+  const daysUntil = getDaysUntilDue(sub);
+
+  if (daysUntil === 0) return t('dueToday');
+  if (daysUntil === 1) return t('dueTomorrow');
+  if (daysUntil === -1) return "Yesterday"; // Could add to translations if needed
+  if (daysUntil < 0) return t('overdue');
+  if (daysUntil < 14) return t('dueInDays').replace('{n}', daysUntil);
+
+  // For longer periods, fall back to date
+  return formatDueDate(sub);
 };
 
 // Get days until due for sorting/display
 const getDaysUntilDue = (sub) => {
-    if (!sub.billingDay && !sub.dueDate) return 999;
+  if (!sub.billingDay && !sub.dueDate) return 999;
 
-    let dueDate;
-    if (sub.billingCycle === 'monthly' && sub.billingDay) {
-        dueDate = getNextDueDate(sub.billingDay, 'monthly');
-    } else if (sub.dueDate) {
-        dueDate = new Date(sub.dueDate);
-    } else {
-        return 999;
-    }
+  let dueDate;
+  if (sub.billingCycle === 'monthly' && sub.billingDay) {
+    dueDate = getNextDueDate(sub.billingDay, 'monthly');
+  } else if (sub.dueDate) {
+    dueDate = new Date(sub.dueDate);
+  } else {
+    return 999;
+  }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    dueDate.setHours(0, 0, 0, 0);
-    return Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  dueDate.setHours(0, 0, 0, 0);
+  return Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
 };
 
 // Calculate lifetime spending (estimated based on current price)
 const calculateLifetimeSpend = (sub) => {
-    if (!sub.startDate) return null;
+  if (!sub.startDate) return null;
 
-    const start = new Date(sub.startDate);
-    const now = new Date();
+  const start = new Date(sub.startDate);
+  const now = new Date();
 
-    // Calculate months between dates
-    const months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+  // Calculate months between dates
+  const months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
 
-    const label = t(sub.billingCycle === 'yearly' ? 'years' : sub.billingCycle === 'weekly' ? 'weeks' : 'months');
-    if (sub.billingCycle === 'yearly') {
-        const years = Math.floor(months / 12);
-        return { amount: years * sub.price, periods: years, periodLabel: label };
-    } else if (sub.billingCycle === 'weekly') {
-        const weeks = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
-        return { amount: weeks * sub.price, periods: weeks, periodLabel: label };
-    } else {
-        return { amount: months * sub.price, periods: months, periodLabel: label };
-    }
+  const label = t(sub.billingCycle === 'yearly' ? 'years' : sub.billingCycle === 'weekly' ? 'weeks' : 'months');
+  if (sub.billingCycle === 'yearly') {
+    const years = Math.floor(months / 12);
+    return { amount: years * sub.price, periods: years, periodLabel: label };
+  } else if (sub.billingCycle === 'weekly') {
+    const weeks = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
+    return { amount: weeks * sub.price, periods: weeks, periodLabel: label };
+  } else {
+    return { amount: months * sub.price, periods: months, periodLabel: label };
+  }
 };
 
 // Helper to get theme-based colors for charts
 const getThemeColors = () => {
-    const isLight = state.preferences.theme === 'light';
-    return {
-        chartGrid: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)',
-        chartTicks: isLight ? '#64748b' : '#94a3b8',
-        chartBarInactive: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.1)',
-        chartDonutBg: isLight ? '#f1f5f9' : 'rgba(255, 255, 255, 0.05)'
-    };
+  const isLight = state.preferences.theme === 'light';
+  return {
+    chartGrid: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)',
+    chartTicks: isLight ? '#64748b' : '#94a3b8',
+    chartBarInactive: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.1)',
+    chartDonutBg: isLight ? '#f1f5f9' : 'rgba(255, 255, 255, 0.05)'
+  };
 };
 
 const applyTheme = () => {
-    if (state.preferences.theme === 'light') {
-        document.body.classList.add('light-theme');
-    } else {
-        document.body.classList.remove('light-theme');
-    }
+  if (state.preferences.theme === 'light') {
+    document.body.classList.add('light-theme');
+  } else {
+    document.body.classList.remove('light-theme');
+  }
 };
 
 const saveState = () => {
-    localStorage.setItem('subscriptions', JSON.stringify(state.subscriptions));
-    localStorage.setItem('preferences', JSON.stringify(state.preferences));
-    localStorage.setItem('user', JSON.stringify(state.user));
+  localStorage.setItem('subscriptions', JSON.stringify(state.subscriptions));
+  localStorage.setItem('preferences', JSON.stringify(state.preferences));
+  localStorage.setItem('user', JSON.stringify(state.user));
 };
 
 const addSubscription = (sub) => {
-    // Default due date is 1 month from today if not provided
-    const defaultDueDate = new Date();
-    defaultDueDate.setMonth(defaultDueDate.getMonth() + 1);
+  // Default due date is 1 month from today if not provided
+  const defaultDueDate = new Date();
+  defaultDueDate.setMonth(defaultDueDate.getMonth() + 1);
 
-    const newSub = {
-        ...sub,
-        id: Date.now(),
-        dueDate: sub.dueDate || defaultDueDate.toISOString().split('T')[0],
-        billingCycle: sub.billingCycle || 'monthly'
-    };
-    state.subscriptions.push(newSub);
-    saveState();
-    notifyUser(t('subscriptionAdded'), `${newSub.name} - ${formatPrice(newSub.price)}`, 'plus-circle');
-    navigate('bills');
+  const newSub = {
+    ...sub,
+    id: Date.now(),
+    dueDate: sub.dueDate || defaultDueDate.toISOString().split('T')[0],
+    billingCycle: sub.billingCycle || 'monthly'
+  };
+  state.subscriptions.push(newSub);
+  saveState();
+  navigate('bills');
 };
 
 const deleteSubscription = (id) => {
-    const sub = state.subscriptions.find(s => s.id === id);
-    state.subscriptions = state.subscriptions.filter(sub => sub.id !== id);
-    saveState();
-    if (sub) notifyUser(t('subscriptionDeleted'), `${sub.name} has been removed.`, 'trash-2');
-    render();
+  const sub = state.subscriptions.find(s => s.id === id);
+  state.subscriptions = state.subscriptions.filter(sub => sub.id !== id);
+  saveState();
+  render();
 };
 
 const updateSubscription = (id, updates) => {
-    state.subscriptions = state.subscriptions.map(sub =>
-        sub.id === id ? { ...sub, ...updates } : sub
-    );
-    saveState();
-    const sub = state.subscriptions.find(s => s.id === id);
-    if (sub) notifyUser(t('subscriptionUpdated'), `${sub.name} details saved.`, 'check-circle');
-    navigate('bills');
+  state.subscriptions = state.subscriptions.map(sub =>
+    sub.id === id ? { ...sub, ...updates } : sub
+  );
+  saveState();
+  navigate('bills');
 };
 
 const openDetailView = (id) => {
-    state.editingId = id;
-    navigate('detail');
+  state.editingId = id;
+  navigate('detail');
 };
 
 /**
  * Navigation Logic
  */
 const navigate = (screen) => {
-    state.currentScreen = screen;
-    render();
+  state.currentScreen = screen;
+  render();
 
-    // Update nav active state
-    document.querySelectorAll('.nav-item').forEach(item => {
-        const span = item.querySelector('span');
-        if (item.dataset.screen === 'home' && span) span.textContent = t('home');
-        if (item.dataset.screen === 'bills' && span) span.textContent = t('bills');
-        if (item.dataset.screen === 'stats' && span) span.textContent = t('stats');
-        if (item.dataset.screen === 'account' && span) span.textContent = t('account');
+  // Update nav active state
+  document.querySelectorAll('.nav-item').forEach(item => {
+    const span = item.querySelector('span');
+    if (item.dataset.screen === 'home' && span) span.textContent = t('home');
+    if (item.dataset.screen === 'bills' && span) span.textContent = t('bills');
+    if (item.dataset.screen === 'stats' && span) span.textContent = t('stats');
+    if (item.dataset.screen === 'account' && span) span.textContent = t('account');
 
-        if (item.dataset.screen === screen) {
-            item.classList.add('active');
-        } else {
-            item.classList.remove('active');
-        }
-    });
+    if (item.dataset.screen === screen) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
 };
 
 const showLockScreen = () => {
-    const app = document.getElementById('app-container');
-    const lock = document.createElement('div');
-    lock.id = 'lock-screen';
-    lock.innerHTML = `
+  const app = document.getElementById('app-container');
+  const lock = document.createElement('div');
+  lock.id = 'lock-screen';
+  lock.innerHTML = `
     <div class="lock-icon">
       <i data-lucide="shield-check" style="width:40px; height:40px"></i>
     </div>
@@ -663,86 +673,86 @@ const showLockScreen = () => {
       <i data-lucide="fingerprint"></i> Authenticate
     </button>
   `;
-    app.appendChild(lock);
-    lucide.createIcons({ props: { "stroke-width": 2 }, targets: [lock] });
+  app.appendChild(lock);
+  lucide.createIcons({ props: { "stroke-width": 2 }, targets: [lock] });
 
-    lock.querySelector('#unlock-btn').addEventListener('click', async () => {
-        // Simulate WebAuthn/Biometric
-        try {
-            // This is a browser feature, we simulate successful auth
-            const btn = lock.querySelector('#unlock-btn');
-            btn.innerHTML = '<i data-lucide="check"></i> Success';
-            lucide.createIcons({ targets: [btn] });
-            setTimeout(() => {
-                state.isLocked = false;
-                lock.remove();
-                render();
-            }, 800);
-        } catch (e) {
-            console.error(e);
-        }
-    });
+  lock.querySelector('#unlock-btn').addEventListener('click', async () => {
+    // Simulate WebAuthn/Biometric
+    try {
+      // This is a browser feature, we simulate successful auth
+      const btn = lock.querySelector('#unlock-btn');
+      btn.innerHTML = '<i data-lucide="check"></i> Success';
+      lucide.createIcons({ targets: [btn] });
+      setTimeout(() => {
+        state.isLocked = false;
+        lock.remove();
+        render();
+      }, 800);
+    } catch (e) {
+      console.error(e);
+    }
+  });
 };
 
 document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', () => navigate(item.dataset.screen));
+  item.addEventListener('click', () => navigate(item.dataset.screen));
 });
 
 /**
  * Components & Rendering
  */
 const render = () => {
-    const main = document.getElementById('main-content');
-    main.innerHTML = '';
-    main.className = 'animate-up';
+  const main = document.getElementById('main-content');
+  main.innerHTML = '';
+  main.className = 'animate-up';
 
-    if (state.isLocked) {
-        showLockScreen();
-        return;
-    }
+  if (state.isLocked) {
+    showLockScreen();
+    return;
+  }
 
-    switch (state.currentScreen) {
-        case 'home':
-            renderHome(main);
-            break;
-        case 'bills':
-            renderBills(main);
-            break;
-        case 'stats':
-            renderStats(main);
-            break;
-        case 'account':
-            renderAccount(main);
-            break;
-        case 'add':
-            renderAdd(main);
-            break;
-        case 'add-custom':
-            renderAddCustom(main);
-            break;
-        case 'edit':
-            renderEdit(main);
-            break;
-        case 'detail':
-            renderDetail(main);
-            break;
-        case 'insights':
-            renderInsights(main);
-            break;
-    }
+  switch (state.currentScreen) {
+    case 'home':
+      renderHome(main);
+      break;
+    case 'bills':
+      renderBills(main);
+      break;
+    case 'stats':
+      renderStats(main);
+      break;
+    case 'account':
+      renderAccount(main);
+      break;
+    case 'add':
+      renderAdd(main);
+      break;
+    case 'add-custom':
+      renderAddCustom(main);
+      break;
+    case 'edit':
+      renderEdit(main);
+      break;
+    case 'detail':
+      renderDetail(main);
+      break;
+    case 'insights':
+      renderInsights(main);
+      break;
+  }
 
-    // Refresh icons
-    if (window.lucide) lucide.createIcons();
+  // Refresh icons
+  if (window.lucide) lucide.createIcons();
 };
 
 const renderHome = (container) => {
-    // Correctly convert all sums to base currency
-    const totalSpendRaw = state.subscriptions.reduce((sum, sub) => {
-        return sum + convertCurrency(sub.price, sub.currency || 'USD', state.preferences.currency);
-    }, 0);
-    const totalSpendFormatted = totalSpendRaw.toFixed(2);
+  // Correctly convert all sums to base currency
+  const totalSpendRaw = state.subscriptions.reduce((sum, sub) => {
+    return sum + convertCurrency(sub.price, sub.currency || 'USD', state.preferences.currency);
+  }, 0);
+  const totalSpendFormatted = totalSpendRaw.toFixed(2);
 
-    container.innerHTML = `
+  container.innerHTML = `
     <header class="dashboard-header">
       <div class="user-profile">
         <img src="${state.user.avatar}" class="avatar" alt="Avatar">
@@ -801,19 +811,19 @@ const renderHome = (container) => {
       </div>
       <div class="upcoming-scroll">
         ${[...state.subscriptions]
-            .sort((a, b) => getDaysUntilDue(a) - getDaysUntilDue(b))
-            .slice(0, 3)
-            .map(sub => {
-                const daysUntil = getDaysUntilDue(sub);
-                const isUrgent = daysUntil <= 3 && daysUntil >= 0;
-                return `
+      .sort((a, b) => getDaysUntilDue(a) - getDaysUntilDue(b))
+      .slice(0, 3)
+      .map(sub => {
+        const daysUntil = getDaysUntilDue(sub);
+        const isUrgent = daysUntil <= 3 && daysUntil >= 0;
+        return `
           <div class="bill-card clickable-bill" data-id="${sub.id}" style="cursor:pointer; ${isUrgent ? 'border: 1px solid rgba(244, 63, 94, 0.5);' : ''}">
             ${getServiceLogoHTML(sub.name, sub.color, sub.icon, 48)}
             <div class="service-name">${sub.name}</div>
             <div class="service-price">${formatPrice(sub.price, sub.currency)}</div>
             <div class="service-date" style="${isUrgent ? 'color: #f43f5e;' : ''}">
               <i data-lucide="calendar" style="width:12px"></i>
-              ${formatDueDate(sub).toUpperCase()}
+              ${getRelativeDueDate(sub).toUpperCase()}
             </div>
           </div>
         `}).join('')}
@@ -826,7 +836,7 @@ const renderHome = (container) => {
       </div>
       <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 24px; padding: 12px; margin-bottom: 20px">
         ${state.notifications.length === 0 ? '<div style="padding: 24px; text-align: center; color: var(--text-secondary)">No recent activity</div>' :
-            state.notifications.slice(0, 4).map((n, idx) => `
+      state.notifications.slice(0, 4).map((n, idx) => `
             <div style="display: flex; gap: 16px; align-items: center; padding: 12px; ${idx === Math.min(state.notifications.length, 4) - 1 ? '' : 'border-bottom: 1px solid var(--border-color);'}">
               <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--glass-bg); display: flex; align-items: center; justify-content: center; color: var(--accent-blue)">
                 <i data-lucide="${n.icon || 'activity'}" style="width: 16px"></i>
@@ -842,56 +852,56 @@ const renderHome = (container) => {
     </section>
 `;
 
-    // Add click handlers
-    container.querySelector('#insights-btn').addEventListener('click', () => navigate('insights'));
+  // Add click handlers
+  container.querySelector('#insights-btn').addEventListener('click', () => navigate('insights'));
 
-    // Notification Center Toggle
-    const notifBtn = container.querySelector('#notif-btn');
-    const notifCenter = container.querySelector('#notification-center');
-    notifBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        notifCenter.classList.toggle('show');
-    });
+  // Notification Center Toggle
+  const notifBtn = container.querySelector('#notif-btn');
+  const notifCenter = container.querySelector('#notification-center');
+  notifBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    notifCenter.classList.toggle('show');
+  });
 
-    document.addEventListener('click', () => notifCenter.classList.remove('show'));
-    notifCenter.addEventListener('click', e => e.stopPropagation());
+  document.addEventListener('click', () => notifCenter.classList.remove('show'));
+  notifCenter.addEventListener('click', e => e.stopPropagation());
 
-    // Swipe-to-dismiss (click for now as simulation)
-    container.querySelectorAll('.notification-item').forEach(item => {
-        item.addEventListener('click', () => {
-            item.classList.add('swiping');
-            setTimeout(() => {
-                state.notifications = state.notifications.filter(n => n.id !== parseInt(item.dataset.id));
-                saveState();
-                render();
-            }, 300);
-        });
-    });
-
-    container.querySelector('#clear-notifs')?.addEventListener('click', () => {
-        state.notifications = [];
+  // Swipe-to-dismiss (click for now as simulation)
+  container.querySelectorAll('.notification-item').forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.add('swiping');
+      setTimeout(() => {
+        state.notifications = state.notifications.filter(n => n.id !== parseInt(item.dataset.id));
         saveState();
         render();
+      }, 300);
     });
+  });
 
-    container.querySelectorAll('.clickable-bill').forEach(card => {
-        card.addEventListener('click', () => openDetailView(parseInt(card.dataset.id)));
-    });
+  container.querySelector('#clear-notifs')?.addEventListener('click', () => {
+    state.notifications = [];
+    saveState();
+    render();
+  });
 
-    initHomeCharts();
+  container.querySelectorAll('.clickable-bill').forEach(card => {
+    card.addEventListener('click', () => openDetailView(parseInt(card.dataset.id)));
+  });
+
+  initHomeCharts();
 };
 
 const renderBills = (container) => {
-    const searchQuery = state.billsSearchQuery || '';
-    const searchOpen = state.billsSearchOpen || false;
+  const searchQuery = state.billsSearchQuery || '';
+  const searchOpen = state.billsSearchOpen || false;
 
-    // List rendering with Swipe support
-    const renderListHTML = (items) => {
-        return items.map(sub => {
-            const daysUntil = getDaysUntilDue(sub);
-            const isUrgent = daysUntil <= 3 && daysUntil >= 0;
-            const cycleLabel = sub.billingCycle === 'yearly' ? '/yr' : sub.billingCycle === 'weekly' ? '/wk' : '/mo';
-            return `
+  // List rendering with Swipe support
+  const renderListHTML = (items) => {
+    return items.map(sub => {
+      const daysUntil = getDaysUntilDue(sub);
+      const isUrgent = daysUntil <= 3 && daysUntil >= 0;
+      const cycleLabel = sub.billingCycle === 'yearly' ? '/yr' : sub.billingCycle === 'weekly' ? '/wk' : '/mo';
+      return `
       <div class="swipe-container">
         <div class="swipe-actions" data-id="${sub.id}">
           <i data-lucide="trash-2"></i>
@@ -904,18 +914,18 @@ const renderBills = (container) => {
           </div>
           <div class="item-meta">
             <div class="item-price">${formatPrice(sub.price)}${cycleLabel}</div>
-            <div class="item-next" style="${isUrgent ? 'color: #f43f5e;' : ''}">${formatDueDate(sub)}</div>
+            <div class="item-next" style="${isUrgent ? 'color: #f43f5e;' : ''}">${getRelativeDueDate(sub)}</div>
           </div>
         </div>
       </div>
     `}).join('');
-    };
+  };
 
-    const initialFiltered = state.subscriptions
-        .filter(sub => sub.name.toLowerCase().includes(searchQuery.toLowerCase()))
-        .sort((a, b) => getDaysUntilDue(a) - getDaysUntilDue(b));
+  const initialFiltered = state.subscriptions
+    .filter(sub => sub.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .sort((a, b) => getDaysUntilDue(a) - getDaysUntilDue(b));
 
-    container.innerHTML = `
+  container.innerHTML = `
     <div class="section-title" style="margin-top: 10px; margin-bottom: 24px">
       <h2 style="font-family: var(--font-heading); font-size: 28px">${t('bills')}</h2>
       <div style="display: flex; gap: 8px; align-items: center">
@@ -934,76 +944,76 @@ const renderBills = (container) => {
     </div>
   `;
 
-    // Initial event mapping
-    const attachItemEvents = (root) => {
-        let touchStartX = 0;
-        let longPressTimer = null;
-        let contextMenuOpen = null;
+  // Initial event mapping
+  const attachItemEvents = (root) => {
+    let touchStartX = 0;
+    let longPressTimer = null;
+    let contextMenuOpen = null;
 
-        root.querySelectorAll('.subscription-item').forEach(item => {
-            const container = item.closest('.swipe-container');
+    root.querySelectorAll('.subscription-item').forEach(item => {
+      const container = item.closest('.swipe-container');
 
-            // Click to open detail view
-            item.addEventListener('click', (e) => {
-                // Don't open if context menu is showing
-                if (contextMenuOpen) {
-                    closeContextMenu();
-                    return;
-                }
-                openDetailView(parseInt(item.dataset.id));
-            });
+      // Click to open detail view
+      item.addEventListener('click', (e) => {
+        // Don't open if context menu is showing
+        if (contextMenuOpen) {
+          closeContextMenu();
+          return;
+        }
+        openDetailView(parseInt(item.dataset.id));
+      });
 
-            // Long press to show context menu
-            item.addEventListener('touchstart', (e) => {
-                longPressTimer = setTimeout(() => {
-                    showContextMenu(item, e.touches[0].clientX, e.touches[0].clientY);
-                }, 500); // 500ms long press
-            }, { passive: true });
+      // Long press to show context menu
+      item.addEventListener('touchstart', (e) => {
+        longPressTimer = setTimeout(() => {
+          showContextMenu(item, e.touches[0].clientX, e.touches[0].clientY);
+        }, 500); // 500ms long press
+      }, { passive: true });
 
-            item.addEventListener('touchmove', () => {
-                if (longPressTimer) {
-                    clearTimeout(longPressTimer);
-                    longPressTimer = null;
-                }
-            }, { passive: true });
+      item.addEventListener('touchmove', () => {
+        if (longPressTimer) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+      }, { passive: true });
 
-            item.addEventListener('touchend', () => {
-                if (longPressTimer) {
-                    clearTimeout(longPressTimer);
-                    longPressTimer = null;
-                }
-            }, { passive: true });
+      item.addEventListener('touchend', () => {
+        if (longPressTimer) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+      }, { passive: true });
 
-            item.addEventListener('touchcancel', () => {
-                if (longPressTimer) {
-                    clearTimeout(longPressTimer);
-                    longPressTimer = null;
-                }
-            }, { passive: true });
+      item.addEventListener('touchcancel', () => {
+        if (longPressTimer) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+      }, { passive: true });
 
-            // Desktop: right-click for context menu
-            item.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                showContextMenu(item, e.clientX, e.clientY);
-            });
-        });
+      // Desktop: right-click for context menu
+      item.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        showContextMenu(item, e.clientX, e.clientY);
+      });
+    });
 
-        // Function to show context menu
-        const showContextMenu = (item, x, y) => {
-            closeContextMenu(); // Close any existing menu
+    // Function to show context menu
+    const showContextMenu = (item, x, y) => {
+      closeContextMenu(); // Close any existing menu
 
-            const subId = parseInt(item.dataset.id);
-            const sub = state.subscriptions.find(s => s.id === subId);
-            if (!sub) return;
+      const subId = parseInt(item.dataset.id);
+      const sub = state.subscriptions.find(s => s.id === subId);
+      if (!sub) return;
 
-            // Add haptic feedback on mobile
-            if (navigator.vibrate) {
-                navigator.vibrate(50);
-            }
+      // Add haptic feedback on mobile
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
 
-            const menu = document.createElement('div');
-            menu.className = 'context-menu';
-            menu.style.cssText = `
+      const menu = document.createElement('div');
+      menu.className = 'context-menu';
+      menu.style.cssText = `
                 position: fixed;
                 left: ${x}px;
                 top: ${y}px;
@@ -1017,7 +1027,7 @@ const renderBills = (container) => {
                 animation: scaleIn 0.2s ease-out;
             `;
 
-            menu.innerHTML = `
+      menu.innerHTML = `
                 <div class="context-menu-item" data-action="edit" style="padding: 14px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: background 0.2s">
                     <i data-lucide="edit-3" style="width: 18px; height: 18px; color: var(--accent-blue)"></i>
                     <span style="color: var(--text-primary); font-size: 14px">Edit</span>
@@ -1029,116 +1039,116 @@ const renderBills = (container) => {
                 </div>
             `;
 
-            document.body.appendChild(menu);
-            contextMenuOpen = menu;
+      document.body.appendChild(menu);
+      contextMenuOpen = menu;
 
-            // Position adjustment if menu goes off screen
-            const rect = menu.getBoundingClientRect();
-            if (rect.right > window.innerWidth) {
-                menu.style.left = `${window.innerWidth - rect.width - 10}px`;
+      // Position adjustment if menu goes off screen
+      const rect = menu.getBoundingClientRect();
+      if (rect.right > window.innerWidth) {
+        menu.style.left = `${window.innerWidth - rect.width - 10}px`;
+      }
+      if (rect.bottom > window.innerHeight) {
+        menu.style.top = `${window.innerHeight - rect.height - 10}px`;
+      }
+
+      // Add event listeners to menu items
+      menu.querySelectorAll('.context-menu-item').forEach(menuItem => {
+        menuItem.addEventListener('mouseenter', () => {
+          menuItem.style.background = 'var(--glass-bg)';
+        });
+        menuItem.addEventListener('mouseleave', () => {
+          menuItem.style.background = 'transparent';
+        });
+        menuItem.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const action = menuItem.dataset.action;
+
+          if (action === 'edit') {
+            navigate('edit');
+            state.editingId = subId;
+          } else if (action === 'delete') {
+            if (confirm(`Delete ${sub.name}?`)) {
+              deleteSubscription(subId);
             }
-            if (rect.bottom > window.innerHeight) {
-                menu.style.top = `${window.innerHeight - rect.height - 10}px`;
-            }
+          }
 
-            // Add event listeners to menu items
-            menu.querySelectorAll('.context-menu-item').forEach(menuItem => {
-                menuItem.addEventListener('mouseenter', () => {
-                    menuItem.style.background = 'var(--glass-bg)';
-                });
-                menuItem.addEventListener('mouseleave', () => {
-                    menuItem.style.background = 'transparent';
-                });
-                menuItem.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const action = menuItem.dataset.action;
+          closeContextMenu();
+        });
+      });
 
-                    if (action === 'edit') {
-                        navigate('edit');
-                        state.editingId = subId;
-                    } else if (action === 'delete') {
-                        if (confirm(`Delete ${sub.name}?`)) {
-                            deleteSubscription(subId);
-                        }
-                    }
+      // Refresh icons
+      if (window.lucide) window.lucide.createIcons();
 
-                    closeContextMenu();
-                });
-            });
-
-            // Refresh icons
-            if (window.lucide) window.lucide.createIcons();
-
-            // Close menu when clicking outside
-            setTimeout(() => {
-                document.addEventListener('click', closeContextMenu);
-                document.addEventListener('touchstart', closeContextMenu);
-            }, 100);
-        };
-
-        const closeContextMenu = () => {
-            if (contextMenuOpen) {
-                contextMenuOpen.remove();
-                contextMenuOpen = null;
-                document.removeEventListener('click', closeContextMenu);
-                document.removeEventListener('touchstart', closeContextMenu);
-            }
-        };
-
-        if (window.lucide) window.lucide.createIcons();
+      // Close menu when clicking outside
+      setTimeout(() => {
+        document.addEventListener('click', closeContextMenu);
+        document.addEventListener('touchstart', closeContextMenu);
+      }, 100);
     };
 
-    attachItemEvents(container);
+    const closeContextMenu = () => {
+      if (contextMenuOpen) {
+        contextMenuOpen.remove();
+        contextMenuOpen = null;
+        document.removeEventListener('click', closeContextMenu);
+        document.removeEventListener('touchstart', closeContextMenu);
+      }
+    };
 
-    // Toggle search bar
-    const toggleBtn = container.querySelector('#toggle-search-btn');
-    const searchInput = container.querySelector('#bill-search-input');
-    const searchBox = container.querySelector('#search-container');
+    if (window.lucide) window.lucide.createIcons();
+  };
 
-    toggleBtn.addEventListener('click', () => {
-        state.billsSearchOpen = !state.billsSearchOpen;
-        if (state.billsSearchOpen) {
-            searchBox.style.display = 'flex';
-            searchBox.classList.add('opening');
-            setTimeout(() => {
-                searchInput.focus();
-                searchBox.classList.remove('opening');
-            }, 400);
-        } else {
-            state.billsSearchQuery = '';
-            render();
-        }
-    });
+  attachItemEvents(container);
 
-    // Handle search input
-    searchInput.addEventListener('input', (e) => {
-        state.billsSearchQuery = e.target.value;
-        const currentList = container.querySelector('.subscriptions-list');
-        const filtered = state.subscriptions
-            .filter(sub => sub.name.toLowerCase().includes(state.billsSearchQuery.toLowerCase()))
-            .sort((a, b) => getDaysUntilDue(a) - getDaysUntilDue(b));
+  // Toggle search bar
+  const toggleBtn = container.querySelector('#toggle-search-btn');
+  const searchInput = container.querySelector('#bill-search-input');
+  const searchBox = container.querySelector('#search-container');
 
-        currentList.innerHTML = renderListHTML(filtered);
-        attachItemEvents(currentList);
-    });
+  toggleBtn.addEventListener('click', () => {
+    state.billsSearchOpen = !state.billsSearchOpen;
+    if (state.billsSearchOpen) {
+      searchBox.style.display = 'flex';
+      searchBox.classList.add('opening');
+      setTimeout(() => {
+        searchInput.focus();
+        searchBox.classList.remove('opening');
+      }, 400);
+    } else {
+      state.billsSearchQuery = '';
+      render();
+    }
+  });
+
+  // Handle search input
+  searchInput.addEventListener('input', (e) => {
+    state.billsSearchQuery = e.target.value;
+    const currentList = container.querySelector('.subscriptions-list');
+    const filtered = state.subscriptions
+      .filter(sub => sub.name.toLowerCase().includes(state.billsSearchQuery.toLowerCase()))
+      .sort((a, b) => getDaysUntilDue(a) - getDaysUntilDue(b));
+
+    currentList.innerHTML = renderListHTML(filtered);
+    attachItemEvents(currentList);
+  });
 };
 
 const renderStats = (container) => {
-    const totalSpend = state.subscriptions.reduce((sum, sub) => sum + sub.price, 0).toFixed(2);
+  const totalSpend = state.subscriptions.reduce((sum, sub) => sum + sub.price, 0).toFixed(2);
 
-    // Calculate category breakdown
-    const categoryTotals = state.subscriptions.reduce((acc, sub) => {
-        acc[sub.category] = (acc[sub.category] || 0) + sub.price;
-        return acc;
-    }, {});
+  // Calculate category breakdown
+  const categoryTotals = state.subscriptions.reduce((acc, sub) => {
+    acc[sub.category] = (acc[sub.category] || 0) + sub.price;
+    return acc;
+  }, {});
 
-    const categoryData = Object.entries(categoryTotals).map(([name, amount]) => ({
-        name,
-        amount: amount.toFixed(2),
-        percentage: ((amount / parseFloat(totalSpend)) * 100).toFixed(0)
-    }));
+  const categoryData = Object.entries(categoryTotals).map(([name, amount]) => ({
+    name,
+    amount: amount.toFixed(2),
+    percentage: ((amount / parseFloat(totalSpend)) * 100).toFixed(0)
+  }));
 
-    container.innerHTML = `
+  container.innerHTML = `
   <div class="section-title" style="margin-top: 10px; margin-bottom: 24px" >
       <h2 style="font-family: var(--font-heading); font-size: 28px">${t('analytics')}</h2>
       <button class="icon-button"><i data-lucide="download"></i></button>
@@ -1176,8 +1186,8 @@ const renderStats = (container) => {
         </div>
         <div style="flex: 1">
           ${categoryData.map((cat, idx) => {
-        const colors = ['#f43f5e', '#2563eb', '#10b981', '#f59e0b', '#8b5cf6'];
-        return `
+    const colors = ['#f43f5e', '#2563eb', '#10b981', '#f59e0b', '#8b5cf6'];
+    return `
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px">
                 <div style="display: flex; align-items: center; gap: 8px">
                   <div style="width: 12px; height: 12px; border-radius: 3px; background: ${colors[idx % colors.length]}"></div>
@@ -1189,7 +1199,7 @@ const renderStats = (container) => {
                 </div>
               </div>
             `;
-    }).join('')}
+  }).join('')}
         </div>
       </div>
     </div>
@@ -1197,9 +1207,9 @@ const renderStats = (container) => {
     <h4 style="color: var(--text-secondary); font-size: 12px; letter-spacing: 1px; margin-bottom: 16px; text-transform: uppercase">${t('topSubscriptions')}</h4>
     
     ${state.subscriptions
-            .sort((a, b) => b.price - a.price)
-            .slice(0, 5)
-            .map((sub, idx) => `
+      .sort((a, b) => b.price - a.price)
+      .slice(0, 5)
+      .map((sub, idx) => `
         <div class="subscription-item" style="margin-bottom: 12px">
           <div style="display: flex; align-items: center; gap: 12px; flex: 1">
             <div style="color: var(--text-secondary); font-size: 14px; font-weight: 600; width: 20px">#${idx + 1}</div>
@@ -1212,80 +1222,80 @@ const renderStats = (container) => {
           <div class="item-price">${formatPrice(sub.price)}</div>
         </div>
       `).join('')
-        }
+    }
 `;
 
-    // Initialize charts
-    setTimeout(() => {
-        const barCtx = document.getElementById('statsBarChart').getContext('2d');
-        const doughnutCtx = document.getElementById('statsDoughnutChart').getContext('2d');
+  // Initialize charts
+  setTimeout(() => {
+    const barCtx = document.getElementById('statsBarChart').getContext('2d');
+    const doughnutCtx = document.getElementById('statsDoughnutChart').getContext('2d');
 
-        new Chart(barCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Monthly Spend',
-                    data: [totalSpend * 0.9, totalSpend * 0.95, totalSpend, totalSpend * 1.05, totalSpend * 0.98, totalSpend],
-                    backgroundColor: '#2563eb',
-                    borderRadius: 8,
-                    borderSkipped: false,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => '$' + context.parsed.y.toFixed(2)
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: getThemeColors().chartTicks }
-                    },
-                    y: {
-                        grid: { color: getThemeColors().chartGrid },
-                        ticks: { color: getThemeColors().chartTicks }
-                    }
-                }
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Monthly Spend',
+          data: [totalSpend * 0.9, totalSpend * 0.95, totalSpend, totalSpend * 1.05, totalSpend * 0.98, totalSpend],
+          backgroundColor: '#2563eb',
+          borderRadius: 8,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context) => '$' + context.parsed.y.toFixed(2)
             }
-        });
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: getThemeColors().chartTicks }
+          },
+          y: {
+            grid: { color: getThemeColors().chartGrid },
+            ticks: { color: getThemeColors().chartTicks }
+          }
+        }
+      }
+    });
 
-        const colors = ['#f43f5e', '#2563eb', '#10b981', '#f59e0b', '#8b5cf6'];
-        new Chart(doughnutCtx, {
-            type: 'doughnut',
-            data: {
-                labels: categoryData.map(c => c.name),
-                datasets: [{
-                    data: categoryData.length > 0 ? categoryData.map(c => c.amount) : [1],
-                    backgroundColor: categoryData.length > 0 ? colors.slice(0, categoryData.length) : [getThemeColors().chartDonutBg],
-                    borderWidth: 0,
-                    cutout: '80%'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => context.label + ': $' + context.parsed
-                        }
-                    }
-                }
+    const colors = ['#f43f5e', '#2563eb', '#10b981', '#f59e0b', '#8b5cf6'];
+    new Chart(doughnutCtx, {
+      type: 'doughnut',
+      data: {
+        labels: categoryData.map(c => c.name),
+        datasets: [{
+          data: categoryData.length > 0 ? categoryData.map(c => c.amount) : [1],
+          backgroundColor: categoryData.length > 0 ? colors.slice(0, categoryData.length) : [getThemeColors().chartDonutBg],
+          borderWidth: 0,
+          cutout: '80%'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context) => context.label + ': $' + context.parsed
             }
-        });
-    }, 100);
+          }
+        }
+      }
+    });
+  }, 100);
 };
 
 const renderAccount = (container) => {
-    container.innerHTML = `
+  container.innerHTML = `
   <div class="section-title" style="margin-top: 10px; margin-bottom: 24px" >
       <button class="icon-button" onclick="navigate('home')"><i data-lucide="chevron-left"></i></button>
       <h3 style="font-family: var(--font-heading)">${t('accountSettings')}</h3>
@@ -1386,120 +1396,120 @@ const renderAccount = (container) => {
     </div>
 `;
 
-    // Currency preference change handler
-    container.querySelector('#currency-select').addEventListener('change', (e) => {
-        state.preferences.currency = e.target.value;
-        saveState();
-        render(); // Re-render to update all prices
-    });
+  // Currency preference change handler
+  container.querySelector('#currency-select').addEventListener('change', (e) => {
+    state.preferences.currency = e.target.value;
+    saveState();
+    render(); // Re-render to update all prices
+  });
 
-    // Language preference change handler
-    container.querySelector('#language-select').addEventListener('change', (e) => {
-        state.preferences.language = e.target.value;
+  // Language preference change handler
+  container.querySelector('#language-select').addEventListener('change', (e) => {
+    state.preferences.language = e.target.value;
+    saveState();
+    render();
+  });
+
+  // Reminder interval handler
+  if (state.preferences.notificationsEnabled) {
+    container.querySelector('#reminder-interval').addEventListener('change', (e) => {
+      state.preferences.reminderDaysBefore = parseInt(e.target.value);
+      saveState();
+    });
+  }
+
+  // Notification toggle handler
+  container.querySelector('#notif-toggle').addEventListener('click', async () => {
+    if (!state.preferences.notificationsEnabled) {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        state.preferences.notificationsEnabled = true;
         saveState();
         render();
-    });
-
-    // Reminder interval handler
-    if (state.preferences.notificationsEnabled) {
-        container.querySelector('#reminder-interval').addEventListener('change', (e) => {
-            state.preferences.reminderDaysBefore = parseInt(e.target.value);
-            saveState();
-        });
+        showLocalNotification('Notifications Enabled!', 'You will now receive bill reminders.');
+      } else {
+        alert('Notification permission denied. Please enable it in your browser settings.');
+      }
+    } else {
+      state.preferences.notificationsEnabled = false;
+      saveState();
+      render();
     }
+  });
 
-    // Notification toggle handler
-    container.querySelector('#notif-toggle').addEventListener('click', async () => {
-        if (!state.preferences.notificationsEnabled) {
-            const permission = await Notification.requestPermission();
-            if (permission === 'granted') {
-                state.preferences.notificationsEnabled = true;
-                saveState();
-                render();
-                showLocalNotification('Notifications Enabled!', 'You will now receive bill reminders.');
-            } else {
-                alert('Notification permission denied. Please enable it in your browser settings.');
-            }
+  // Test notification handler
+  if (state.preferences.notificationsEnabled) {
+    container.querySelector('#test-notif-btn').addEventListener('click', () => {
+      showLocalNotification('Test Notification', 'This is how your bill reminders will look!');
+    });
+  }
+
+  // Avatar change handler
+  const avatarContainer = container.querySelector('#avatar-container');
+  const avatarInput = container.querySelector('#avatar-input');
+
+  avatarContainer.addEventListener('click', () => {
+    avatarInput.click();
+  });
+
+  // Theme toggle handler
+  container.querySelector('#theme-toggle').addEventListener('click', () => {
+    state.preferences.theme = state.preferences.theme === 'dark' ? 'light' : 'dark';
+    saveState();
+    applyTheme();
+    render(); // Re-render to update the button text/icon
+  });
+
+  // Backup handlers
+  container.querySelector('#export-btn').addEventListener('click', () => {
+    const data = btoa(JSON.stringify({
+      subscriptions: state.subscriptions,
+      preferences: state.preferences,
+      user: state.user
+    }));
+    const code = prompt(t('copyCode'), data);
+  });
+
+  container.querySelector('#import-btn').addEventListener('click', () => {
+    const code = prompt(t('pasteCode'));
+    if (code) {
+      try {
+        const data = JSON.parse(atob(code));
+        if (data.subscriptions && Array.isArray(data.subscriptions)) {
+          state.subscriptions = data.subscriptions;
+          if (data.preferences) state.preferences = data.preferences;
+          if (data.user) state.user = data.user;
+          saveState();
+          alert(t('dataRestored'));
+          render();
         } else {
-            state.preferences.notificationsEnabled = false;
-            saveState();
-            render();
+          throw new Error();
         }
-    });
-
-    // Test notification handler
-    if (state.preferences.notificationsEnabled) {
-        container.querySelector('#test-notif-btn').addEventListener('click', () => {
-            showLocalNotification('Test Notification', 'This is how your bill reminders will look!');
-        });
+      } catch (e) {
+        alert(t('invalidCode'));
+      }
     }
+  });
 
-    // Avatar change handler
-    const avatarContainer = container.querySelector('#avatar-container');
-    const avatarInput = container.querySelector('#avatar-input');
-
-    avatarContainer.addEventListener('click', () => {
-        avatarInput.click();
-    });
-
-    // Theme toggle handler
-    container.querySelector('#theme-toggle').addEventListener('click', () => {
-        state.preferences.theme = state.preferences.theme === 'dark' ? 'light' : 'dark';
+  avatarInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const dataUrl = event.target.result;
+        state.user.avatar = dataUrl;
         saveState();
-        applyTheme();
-        render(); // Re-render to update the button text/icon
-    });
-
-    // Backup handlers
-    container.querySelector('#export-btn').addEventListener('click', () => {
-        const data = btoa(JSON.stringify({
-            subscriptions: state.subscriptions,
-            preferences: state.preferences,
-            user: state.user
-        }));
-        const code = prompt(t('copyCode'), data);
-    });
-
-    container.querySelector('#import-btn').addEventListener('click', () => {
-        const code = prompt(t('pasteCode'));
-        if (code) {
-            try {
-                const data = JSON.parse(atob(code));
-                if (data.subscriptions && Array.isArray(data.subscriptions)) {
-                    state.subscriptions = data.subscriptions;
-                    if (data.preferences) state.preferences = data.preferences;
-                    if (data.user) state.user = data.user;
-                    saveState();
-                    alert(t('dataRestored'));
-                    render();
-                } else {
-                    throw new Error();
-                }
-            } catch (e) {
-                alert(t('invalidCode'));
-            }
-        }
-    });
-
-    avatarInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const dataUrl = event.target.result;
-                state.user.avatar = dataUrl;
-                saveState();
-                container.querySelector('#profile-img').src = dataUrl;
-                // Optionally re-render completely
-                // render(); 
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+        container.querySelector('#profile-img').src = dataUrl;
+        // Optionally re-render completely
+        // render(); 
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 };
 
 const renderAdd = (container) => {
-    container.innerHTML = `
+  container.innerHTML = `
   <div class="section-title" style="margin-top: 10px; margin-bottom: 24px" >
       <button class="icon-button" onclick="navigate('home')"><i data-lucide="chevron-left"></i></button>
       <h3 style="font-family: var(--font-heading)">${t('addSub')}</h3>
@@ -1515,15 +1525,15 @@ const renderAdd = (container) => {
     
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px">
       ${[
-            { name: 'Netflix', price: 15.99, color: '#E50914', cat: 'Entertainment', logo: 'netflix.png' },
-            { name: 'Spotify', price: 9.99, color: '#1DB954', cat: 'Entertainment', logo: 'spotify.png' },
-            { name: 'iCloud', price: 9.99, color: '#007AFF', cat: 'Software', logo: 'icloud.png' },
-            { name: 'Disney+', price: 13.99, color: '#006E99', cat: 'Entertainment', logo: 'disney.png' },
-            { name: 'Amazon', price: 14.99, color: '#FF9900', cat: 'Shopping', logo: 'amazon.png' },
-            { name: 'Adobe', price: 52.99, color: '#FF021B', cat: 'Software', logo: 'adobe.png' },
-            { name: 'YouTube', price: 13.99, color: '#FF0000', cat: 'Entertainment', logo: 'youtube.png' },
-            { name: 'Slack', price: 12.50, color: '#4A154B', cat: 'Software', logo: 'slack.png' }
-        ].map(p => `
+      { name: 'Netflix', price: 15.99, color: '#E50914', cat: 'Entertainment', logo: 'netflix.png' },
+      { name: 'Spotify', price: 9.99, color: '#1DB954', cat: 'Entertainment', logo: 'spotify.png' },
+      { name: 'iCloud', price: 9.99, color: '#007AFF', cat: 'Software', logo: 'icloud.png' },
+      { name: 'Disney+', price: 13.99, color: '#006E99', cat: 'Entertainment', logo: 'disney.png' },
+      { name: 'Amazon', price: 14.99, color: '#FF9900', cat: 'Shopping', logo: 'amazon.png' },
+      { name: 'Adobe', price: 52.99, color: '#FF021B', cat: 'Software', logo: 'adobe.png' },
+      { name: 'YouTube', price: 13.99, color: '#FF0000', cat: 'Entertainment', logo: 'youtube.png' },
+      { name: 'Slack', price: 12.50, color: '#4A154B', cat: 'Software', logo: 'slack.png' }
+    ].map(p => `
         <div class="preset-card" data-name="${p.name}" data-price="${p.price}" data-color="${p.color}" data-icon="${p.name.charAt(0)}" data-category="${p.cat}" style="background:var(--card-bg); border: 1px solid var(--border-color); border-radius:16px; height:90px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; overflow:hidden; transition: all 0.3s">
           <div style="width: 40px; height: 40px; background-image: url('${p.logo}'); background-size: cover; background-position: center; border-radius: 10px"></div>
           <div style="font-size:10px; font-weight:600; color: var(--text-primary)">${p.name}</div>
@@ -1536,21 +1546,21 @@ const renderAdd = (container) => {
     </button>
 `;
 
-    // Add listener to custom button
-    container.querySelector('#custom-service-btn').addEventListener('click', () => navigate('add-custom'));
+  // Add listener to custom button
+  container.querySelector('#custom-service-btn').addEventListener('click', () => navigate('add-custom'));
 
-    // Add listeners to presets
-    container.querySelectorAll('.preset-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const { name, price, color, icon, category } = card.dataset;
-            state.selectedPreset = { name, price: parseFloat(price), color, icon, category };
-            navigate('add-custom');
-        });
+  // Add listeners to presets
+  container.querySelectorAll('.preset-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const { name, price, color, icon, category } = card.dataset;
+      state.selectedPreset = { name, price: parseFloat(price), color, icon, category };
+      navigate('add-custom');
     });
+  });
 };
 
 const renderAddCustom = (container) => {
-    container.innerHTML = `
+  container.innerHTML = `
   <div class="section-title" style="margin-top: 10px; margin-bottom: 24px" >
       <button class="icon-button" onclick="state.selectedPreset = null; navigate('add')"><i data-lucide="chevron-left"></i></button>
       <h3 style="font-family: var(--font-heading)">${t('newService')}</h3>
@@ -1610,71 +1620,71 @@ const renderAddCustom = (container) => {
   </form>
 `;
 
-    // Brand color auto-matching
-    const nameInput = container.querySelector('#custom-name');
-    nameInput.addEventListener('input', (e) => {
-        const val = e.target.value.toLowerCase();
-        let matched = false;
-        for (const brand in BRAND_COLORS) {
-            if (val.includes(brand)) {
-                container.querySelector('#custom-color').value = BRAND_COLORS[brand];
-                nameInput.style.borderBottom = `2px solid ${BRAND_COLORS[brand]} `;
-                matched = true;
-                break;
-            }
-        }
-        if (!matched) {
-            container.querySelector('#custom-color').value = '#2563eb';
-            nameInput.style.borderBottom = `2px solid transparent`;
-        }
-    });
+  // Brand color auto-matching
+  const nameInput = container.querySelector('#custom-name');
+  nameInput.addEventListener('input', (e) => {
+    const val = e.target.value.toLowerCase();
+    let matched = false;
+    for (const brand in BRAND_COLORS) {
+      if (val.includes(brand)) {
+        container.querySelector('#custom-color').value = BRAND_COLORS[brand];
+        nameInput.style.borderBottom = `2px solid ${BRAND_COLORS[brand]} `;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) {
+      container.querySelector('#custom-color').value = '#2563eb';
+      nameInput.style.borderBottom = `2px solid transparent`;
+    }
+  });
 
-    // Toggle billing day vs due date based on cycle
-    const billingCycleSelect = document.getElementById('custom-billing-cycle');
-    const billingDayGroup = document.getElementById('billing-day-group');
-    const dueDateGroup = document.getElementById('due-date-group');
+  // Toggle billing day vs due date based on cycle
+  const billingCycleSelect = document.getElementById('custom-billing-cycle');
+  const billingDayGroup = document.getElementById('billing-day-group');
+  const dueDateGroup = document.getElementById('due-date-group');
 
-    billingCycleSelect.addEventListener('change', (e) => {
-        if (e.target.value === 'monthly') {
-            billingDayGroup.style.display = 'block';
-            dueDateGroup.style.display = 'none';
-        } else {
-            billingDayGroup.style.display = 'none';
-            dueDateGroup.style.display = 'block';
-        }
-    });
+  billingCycleSelect.addEventListener('change', (e) => {
+    if (e.target.value === 'monthly') {
+      billingDayGroup.style.display = 'block';
+      dueDateGroup.style.display = 'none';
+    } else {
+      billingDayGroup.style.display = 'none';
+      dueDateGroup.style.display = 'block';
+    }
+  });
 
-    container.querySelector('#custom-sub-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById('custom-name').value;
-        const price = parseFloat(document.getElementById('custom-price').value);
-        const currency = state.preferences.currency; // Use currency from settings
-        const billingCycle = document.getElementById('custom-billing-cycle').value;
-        const category = document.getElementById('custom-category').value;
-        const color = document.getElementById('custom-color').value;
-        const icon = name.charAt(0).toUpperCase();
-        const startDate = document.getElementById('custom-start-date').value || null;
+  container.querySelector('#custom-sub-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('custom-name').value;
+    const price = parseFloat(document.getElementById('custom-price').value);
+    const currency = state.preferences.currency; // Use currency from settings
+    const billingCycle = document.getElementById('custom-billing-cycle').value;
+    const category = document.getElementById('custom-category').value;
+    const color = document.getElementById('custom-color').value;
+    const icon = name.charAt(0).toUpperCase();
+    const startDate = document.getElementById('custom-start-date').value || null;
 
-        let billingDay, dueDate;
-        if (billingCycle === 'monthly') {
-            billingDay = parseInt(document.getElementById('custom-billing-day').value);
-        } else {
-            dueDate = document.getElementById('custom-due-date').value;
-        }
+    let billingDay, dueDate;
+    if (billingCycle === 'monthly') {
+      billingDay = parseInt(document.getElementById('custom-billing-day').value);
+    } else {
+      dueDate = document.getElementById('custom-due-date').value;
+    }
 
-        addSubscription({ name, price, currency, billingCycle, billingDay, dueDate, category, color, icon, startDate });
-        state.selectedPreset = null;
-    });
+    addSubscription({ name, price, currency, billingCycle, billingDay, dueDate, category, color, icon, startDate });
+    state.selectedPreset = null;
+  });
 };
 
 const renderEdit = (container) => {
-    const sub = state.subscriptions.find(s => s.id === state.editingId);
-    if (!sub) {
-        navigate('bills');
-        return;
-    }
+  const sub = state.subscriptions.find(s => s.id === state.editingId);
+  if (!sub) {
+    navigate('bills');
+    return;
+  }
 
-    container.innerHTML = `
+  container.innerHTML = `
   <div class="section-title" style="margin-top: 10px; margin-bottom: 24px">
       <button class="icon-button" onclick="navigate('bills')"><i data-lucide="chevron-left"></i></button>
       <h3 style="font-family: var(--font-heading)">Edit Subscription</h3>
@@ -1688,16 +1698,16 @@ const renderEdit = (container) => {
       <h2 style="font-family: var(--font-heading); margin: 0 0 4px 0">${sub.name}</h2>
       <div style="color: var(--text-secondary); font-size: 14px">${CATEGORY_MAP[state.preferences.language][sub.category] || sub.category}</div>
       ${(() => {
-            const lifetime = calculateLifetimeSpend(sub);
-            if (lifetime && lifetime.periods > 0) {
-                return `<div style="margin-top: 12px; padding: 12px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px">
+      const lifetime = calculateLifetimeSpend(sub);
+      if (lifetime && lifetime.periods > 0) {
+        return `<div style="margin-top: 12px; padding: 12px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px">
             <div style="font-size: 12px; color: var(--text-secondary)">Estimated Lifetime Spend</div>
             <div style="font-size: 24px; font-weight: 700; color: #f43f5e">${formatPrice(lifetime.amount)}</div>
             <div style="font-size: 11px; color: var(--text-secondary)">${lifetime.periods} ${lifetime.periodLabel} subscribed</div>
           </div>`;
-            }
-            return '';
-        })()}
+      }
+      return '';
+    })()}
     </div>
 
     <form id="edit-sub-form" style="display: flex; flex-direction: column; gap: 20px">
@@ -1768,83 +1778,83 @@ const renderEdit = (container) => {
 
 
 
-    // Color swatch selection for edit
-    container.querySelectorAll('#edit-color-swatches .color-swatch').forEach(swatch => {
-        swatch.addEventListener('click', () => {
-            container.querySelectorAll('#edit-color-swatches .color-swatch').forEach(s => {
-                s.style.border = '2px solid transparent';
-                s.style.transform = 'scale(1)';
-            });
-            swatch.style.border = '2px solid white';
-            swatch.style.transform = 'scale(1.1)';
-            document.getElementById('edit-color').value = swatch.dataset.color;
-        });
+  // Color swatch selection for edit
+  container.querySelectorAll('#edit-color-swatches .color-swatch').forEach(swatch => {
+    swatch.addEventListener('click', () => {
+      container.querySelectorAll('#edit-color-swatches .color-swatch').forEach(s => {
+        s.style.border = '2px solid transparent';
+        s.style.transform = 'scale(1)';
+      });
+      swatch.style.border = '2px solid white';
+      swatch.style.transform = 'scale(1.1)';
+      document.getElementById('edit-color').value = swatch.dataset.color;
     });
+  });
 
-    // Toggle billing day vs due date based on cycle
-    const editBillingCycleSelect = document.getElementById('edit-billing-cycle');
-    const editBillingDayGroup = document.getElementById('edit-billing-day-group');
-    const editDueDateGroup = document.getElementById('edit-due-date-group');
+  // Toggle billing day vs due date based on cycle
+  const editBillingCycleSelect = document.getElementById('edit-billing-cycle');
+  const editBillingDayGroup = document.getElementById('edit-billing-day-group');
+  const editDueDateGroup = document.getElementById('edit-due-date-group');
 
-    editBillingCycleSelect.addEventListener('change', (e) => {
-        if (e.target.value === 'monthly') {
-            editBillingDayGroup.style.display = 'block';
-            editDueDateGroup.style.display = 'none';
-        } else {
-            editBillingDayGroup.style.display = 'none';
-            editDueDateGroup.style.display = 'block';
-        }
-    });
+  editBillingCycleSelect.addEventListener('change', (e) => {
+    if (e.target.value === 'monthly') {
+      editBillingDayGroup.style.display = 'block';
+      editDueDateGroup.style.display = 'none';
+    } else {
+      editBillingDayGroup.style.display = 'none';
+      editDueDateGroup.style.display = 'block';
+    }
+  });
 
-    container.querySelector('#edit-sub-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById('edit-name').value;
-        const price = parseFloat(document.getElementById('edit-price').value);
-        const billingCycle = document.getElementById('edit-billing-cycle').value;
-        const category = document.getElementById('edit-category').value;
-        const color = document.getElementById('edit-color').value;
-        const icon = name.charAt(0).toUpperCase();
-        const startDate = document.getElementById('edit-start-date').value || null;
+  container.querySelector('#edit-sub-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('edit-name').value;
+    const price = parseFloat(document.getElementById('edit-price').value);
+    const billingCycle = document.getElementById('edit-billing-cycle').value;
+    const category = document.getElementById('edit-category').value;
+    const color = document.getElementById('edit-color').value;
+    const icon = name.charAt(0).toUpperCase();
+    const startDate = document.getElementById('edit-start-date').value || null;
 
-        // Get billing day or due date based on cycle
-        let billingDay, dueDate;
-        if (billingCycle === 'monthly') {
-            billingDay = parseInt(document.getElementById('edit-billing-day').value);
-        } else {
-            dueDate = document.getElementById('edit-due-date').value;
-        }
+    // Get billing day or due date based on cycle
+    let billingDay, dueDate;
+    if (billingCycle === 'monthly') {
+      billingDay = parseInt(document.getElementById('edit-billing-day').value);
+    } else {
+      dueDate = document.getElementById('edit-due-date').value;
+    }
 
-        updateSubscription(sub.id, { name, price, billingCycle, billingDay, dueDate, category, color, icon, startDate });
-    });
+    updateSubscription(sub.id, { name, price, billingCycle, billingDay, dueDate, category, color, icon, startDate });
+  });
 
-    container.querySelector('#delete-btn').addEventListener('click', () => {
-        if (confirm(t('confirmDelete', { name: sub.name }))) {
-            deleteSubscription(sub.id);
-        }
-    });
+  container.querySelector('#delete-btn').addEventListener('click', () => {
+    if (confirm(t('confirmDelete', { name: sub.name }))) {
+      deleteSubscription(sub.id);
+    }
+  });
 };
 
 const renderInsights = (container) => {
-    const totalSpend = state.subscriptions.reduce((sum, sub) => sum + sub.price, 0);
-    const yearlySpend = totalSpend * 12;
+  const totalSpend = state.subscriptions.reduce((sum, sub) => sum + sub.price, 0);
+  const yearlySpend = totalSpend * 12;
 
-    // Category analysis
-    const categoryTotals = state.subscriptions.reduce((acc, sub) => {
-        acc[sub.category] = (acc[sub.category] || 0) + sub.price;
-        return acc;
-    }, {});
+  // Category analysis
+  const categoryTotals = state.subscriptions.reduce((acc, sub) => {
+    acc[sub.category] = (acc[sub.category] || 0) + sub.price;
+    return acc;
+  }, {});
 
-    const topCategory = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1])[0];
-    const mostExpensive = state.subscriptions.reduce((max, sub) => sub.price > max.price ? sub : max, state.subscriptions[0]);
+  const topCategory = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1])[0];
+  const mostExpensive = state.subscriptions.reduce((max, sub) => sub.price > max.price ? sub : max, state.subscriptions[0]);
 
-    // Simulated savings suggestions
-    const savings = [
-        { title: 'Switch to annual billing', description: 'Save ~15% on Netflix and Spotify', amount: (totalSpend * 0.15).toFixed(2) },
-        { title: 'Bundle services', description: 'Combine streaming services for discounts', amount: '12.99' },
-        { title: 'Remove duplicates', description: 'You have 2 music streaming services', amount: '9.99' }
-    ];
+  // Simulated savings suggestions
+  const savings = [
+    { title: 'Switch to annual billing', description: 'Save ~15% on Netflix and Spotify', amount: (totalSpend * 0.15).toFixed(2) },
+    { title: 'Bundle services', description: 'Combine streaming services for discounts', amount: '12.99' },
+    { title: 'Remove duplicates', description: 'You have 2 music streaming services', amount: '9.99' }
+  ];
 
-    container.innerHTML = `
+  container.innerHTML = `
   <div class="section-title" style="margin-top: 10px; margin-bottom: 24px" >
       <button class="icon-button" onclick="navigate('home')"><i data-lucide="chevron-left"></i></button>
       <h3 style="font-family: var(--font-heading)">${t('viewInsights')}</h3>
@@ -1898,7 +1908,7 @@ const renderInsights = (container) => {
         </div>
       </div>
     `).join('')
-        }
+    }
 
 <div style="margin-top: 32px; padding: 20px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; text-align: center">
   <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px">Potential Monthly Savings</div>
@@ -1911,35 +1921,35 @@ const renderInsights = (container) => {
  * Charts Initialization
  */
 const initHomeCharts = () => {
-    const mainChartElem = document.getElementById('mainChart');
-    if (!mainChartElem) return;
+  const mainChartElem = document.getElementById('mainChart');
+  if (!mainChartElem) return;
 
-    const ctx = mainChartElem.getContext('2d');
+  const ctx = mainChartElem.getContext('2d');
 
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            datasets: [{
-                data: [12, 19, 13, 15, 22, 10, 15],
-                backgroundColor: (context) => {
-                    if (context.dataIndex === 4) return '#2563eb';
-                    return getThemeColors().chartBarInactive;
-                },
-                borderRadius: 8,
-                borderSkipped: false,
-            }]
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      datasets: [{
+        data: [12, 19, 13, 15, 22, 10, 15],
+        backgroundColor: (context) => {
+          if (context.dataIndex === 4) return '#2563eb';
+          return getThemeColors().chartBarInactive;
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                x: { display: false },
-                y: { display: false }
-            }
-        }
-    });
+        borderRadius: 8,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { display: false },
+        y: { display: false }
+      }
+    }
+  });
 };
 
 /**
@@ -1950,109 +1960,109 @@ document.getElementById('add-btn').addEventListener('click', () => navigate('add
 
 // Initial Render
 document.addEventListener('DOMContentLoaded', () => {
-    fetchExchangeRates();
-    applyTheme();
-    render();
-    initServiceWorker();
-    checkUpcomingBills();
+  fetchExchangeRates();
+  applyTheme();
+  render();
+  initServiceWorker();
+  checkUpcomingBills();
 });
 
 /**
  * Notification & Service Worker Logic
  */
 const initServiceWorker = () => {
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').then(registration => {
-                console.log('SW registered: ', registration);
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').then(registration => {
+        console.log('SW registered: ', registration);
 
-                // Check for updates every 5 minutes
-                setInterval(() => {
-                    registration.update();
-                }, 300000); // 5 minutes
-            }).catch(registrationError => {
-                console.log('SW registration failed: ', registrationError);
-            });
-        });
+        // Check for updates every 5 minutes
+        setInterval(() => {
+          registration.update();
+        }, 300000); // 5 minutes
+      }).catch(registrationError => {
+        console.log('SW registration failed: ', registrationError);
+      });
+    });
 
-        // Listen for messages from service worker
-        navigator.serviceWorker.addEventListener('message', (event) => {
-            if (event.data && event.data.type === 'NEW_VERSION') {
-                // Add notification about new version
-                notifyUser(
-                    'App Updated! 🎉',
-                    'A new version of Bills App is available. Refresh to get the latest features.',
-                    'sparkles'
-                );
+    // Listen for messages from service worker
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'NEW_VERSION') {
+        // Add notification about new version
+        notifyUser(
+          'App Updated! 🎉',
+          'A new version of Bills App is available. Refresh to get the latest features.',
+          'sparkles'
+        );
 
-                // Store update notification
-                const updateNotification = {
-                    id: Date.now(),
-                    type: 'update',
-                    title: 'App Updated',
-                    message: 'New version available. Tap to refresh.',
-                    timestamp: new Date().toISOString(),
-                    read: false
-                };
+        // Store update notification
+        const updateNotification = {
+          id: Date.now(),
+          type: 'update',
+          title: 'App Updated',
+          message: 'New version available. Tap to refresh.',
+          timestamp: new Date().toISOString(),
+          read: false
+        };
 
-                state.notifications.unshift(updateNotification);
-                saveState();
-            }
-        });
-    }
+        state.notifications.unshift(updateNotification);
+        saveState();
+      }
+    });
+  }
 };
 
 const showLocalNotification = (title, body) => {
-    if (!('Notification' in window)) return;
+  if (!('Notification' in window)) return;
 
-    if (Notification.permission === 'granted') {
-        if (navigator.serviceWorker.controller) {
-            navigator.serviceWorker.ready.then(registration => {
-                registration.showNotification(title, {
-                    body: body,
-                    icon: '/icon-512.png',
-                    badge: '/icon-512.png',
-                    vibrate: [100, 50, 100],
-                });
-            });
-        } else {
-            // Fallback to browser notification if SW not ready
-            new Notification(title, { body, icon: '/icon-512.png' });
-        }
+  if (Notification.permission === 'granted') {
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.ready.then(registration => {
+        registration.showNotification(title, {
+          body: body,
+          icon: '/icon-512.png',
+          badge: '/icon-512.png',
+          vibrate: [100, 50, 100],
+        });
+      });
+    } else {
+      // Fallback to browser notification if SW not ready
+      new Notification(title, { body, icon: '/icon-512.png' });
     }
+  }
 };
 
 const checkUpcomingBills = () => {
-    if (!state.preferences.notificationsEnabled) return;
+  if (!state.preferences.notificationsEnabled) return;
 
-    // Only check once per day/session
-    const lastCheck = localStorage.getItem('lastNotifCheck');
-    const today = new Date().toDateString();
+  // Only check once per day/session
+  const lastCheck = localStorage.getItem('lastNotifCheck');
+  const today = new Date().toDateString();
 
-    if (lastCheck === today) return;
+  if (lastCheck === today) return;
 
-    state.subscriptions.forEach(sub => {
-        const daysUntil = getDaysUntilDue(sub);
-        if (daysUntil === 1) {
-            showLocalNotification('Bill Due Tomorrow', `Your ${sub.name} subscription(${formatPrice(sub.price)}) is due tomorrow!`);
-        } else if (daysUntil === 0) {
-            showLocalNotification('Bill Due Today', `Your ${sub.name} subscription(${formatPrice(sub.price)}) is due today!`);
-        }
-    });
+  state.subscriptions.forEach(sub => {
+    const daysUntil = getDaysUntilDue(sub);
+    if (daysUntil === 1) {
+      showLocalNotification('Bill Due Tomorrow', `Your ${sub.name} subscription(${formatPrice(sub.price)}) is due tomorrow!`);
+    } else if (daysUntil === 0) {
+      showLocalNotification('Bill Due Today', `Your ${sub.name} subscription(${formatPrice(sub.price)}) is due today!`);
+    }
+  });
 
-    localStorage.setItem('lastNotifCheck', today);
+  localStorage.setItem('lastNotifCheck', today);
 };
 const renderDetail = (container) => {
-    const sub = state.subscriptions.find(s => s.id === state.editingId);
-    if (!sub) {
-        navigate('bills');
-        return;
-    }
+  const sub = state.subscriptions.find(s => s.id === state.editingId);
+  if (!sub) {
+    navigate('bills');
+    return;
+  }
 
-    const daysUntil = getDaysUntilDue(sub);
-    const dueText = daysUntil === 0 ? 'Due today' : daysUntil === 1 ? 'Due tomorrow' : daysUntil < 0 ? `Overdue by ${Math.abs(daysUntil)} days` : `Coming up in ${daysUntil} days`;
+  const daysUntil = getDaysUntilDue(sub);
+  const dueText = daysUntil === 0 ? 'Due today' : daysUntil === 1 ? 'Due tomorrow' : daysUntil < 0 ? `Overdue by ${Math.abs(daysUntil)} days` : `Coming up in ${daysUntil} days`;
 
-    container.innerHTML = `
+  container.innerHTML = `
     <div style="min-height: 100vh; background: var(--bg-primary); padding: 20px">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px">
         <button class="icon-button" id="menu-btn" style="position: relative">
@@ -2086,30 +2096,30 @@ const renderDetail = (container) => {
     </div>
   `;
 
-    // Menu toggle
-    const menuBtn = container.querySelector('#menu-btn');
-    const menuDropdown = container.querySelector('#menu-dropdown');
+  // Menu toggle
+  const menuBtn = container.querySelector('#menu-btn');
+  const menuDropdown = container.querySelector('#menu-dropdown');
 
-    menuBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        menuDropdown.style.display = menuDropdown.style.display === 'none' ? 'block' : 'none';
-    });
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menuDropdown.style.display = menuDropdown.style.display === 'none' ? 'block' : 'none';
+  });
 
-    // Close menu when clicking outside
-    document.addEventListener('click', () => {
-        menuDropdown.style.display = 'none';
-    });
+  // Close menu when clicking outside
+  document.addEventListener('click', () => {
+    menuDropdown.style.display = 'none';
+  });
 
-    // Edit option
-    container.querySelector('#edit-option').addEventListener('click', () => {
-        navigate('edit');
-    });
+  // Edit option
+  container.querySelector('#edit-option').addEventListener('click', () => {
+    navigate('edit');
+  });
 
-    // Delete option
-    container.querySelector('#delete-option').addEventListener('click', () => {
-        if (confirm(`Are you sure you want to delete ${sub.name}?`)) {
-            deleteSubscription(sub.id);
-        }
-    });
+  // Delete option
+  container.querySelector('#delete-option').addEventListener('click', () => {
+    if (confirm(`Are you sure you want to delete ${sub.name}?`)) {
+      deleteSubscription(sub.id);
+    }
+  });
 };
 
