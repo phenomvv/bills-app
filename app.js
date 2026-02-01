@@ -179,41 +179,41 @@ const showIOSInstructions = () => {
 
 // Helper to get service logo or letter icon
 const getServiceLogoHTML = (name, color, icon, size = 44) => {
-    const serviceMap = {
-        'netflix': '0 0',
-        'spotify': '33.33% 0',
-        'icloud': '66.66% 0',
-        'disney': '100% 0',
-        'amazon': '0 33.33%',
-        'adobe': '33.33% 33.33%',
-        'youtube': '66.66% 33.33%',
-        'slack': '100% 33.33%'
+    const serviceLogos = {
+        'netflix': 'netflix.png',
+        'spotify': 'spotify.png',
+        'icloud': 'icloud.png',
+        'disney': 'disney.png',
+        'amazon': 'amazon.png',
+        'adobe': 'adobe.png',
+        'youtube': 'youtube.png',
+        'slack': 'slack.png'
     };
 
     const lowerName = name.toLowerCase();
-    let pos = null;
+    let logoFile = null;
 
-    // Check for specific matches first (prioritize more specific terms)
-    if (lowerName.includes('icloud')) {
-        pos = serviceMap['icloud'];
-    } else if (lowerName.includes('netflix')) {
-        pos = serviceMap['netflix'];
+    // Check for specific matches
+    if (lowerName.includes('netflix')) {
+        logoFile = serviceLogos['netflix'];
     } else if (lowerName.includes('spotify')) {
-        pos = serviceMap['spotify'];
+        logoFile = serviceLogos['spotify'];
+    } else if (lowerName.includes('icloud')) {
+        logoFile = serviceLogos['icloud'];
     } else if (lowerName.includes('disney')) {
-        pos = serviceMap['disney'];
+        logoFile = serviceLogos['disney'];
     } else if (lowerName.includes('amazon')) {
-        pos = serviceMap['amazon'];
+        logoFile = serviceLogos['amazon'];
     } else if (lowerName.includes('adobe')) {
-        pos = serviceMap['adobe'];
+        logoFile = serviceLogos['adobe'];
     } else if (lowerName.includes('youtube')) {
-        pos = serviceMap['youtube'];
+        logoFile = serviceLogos['youtube'];
     } else if (lowerName.includes('slack')) {
-        pos = serviceMap['slack'];
+        logoFile = serviceLogos['slack'];
     }
 
-    if (pos) {
-        return `<div style="width: ${size}px; height: ${size}px; background-image: url('logos.png'); background-size: 400% 400%; background-position: ${pos}; border-radius: ${size / 4}px; flex-shrink: 0"></div>`;
+    if (logoFile) {
+        return `<div style="width: ${size}px; height: ${size}px; background-image: url('${logoFile}'); background-size: cover; background-position: center; border-radius: ${size / 4}px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15)"></div>`;
     }
 
     return `
@@ -245,7 +245,13 @@ const formatPrice = (price, fromCurrency = null) => {
 
 const notifyUser = (title, body, icon = 'bell') => {
     // In-app notification
-    state.notifications.unshift({ id: Date.now(), title, body, icon });
+    state.notifications.unshift({
+        id: Date.now(),
+        title,
+        body,
+        icon,
+        timestamp: new Date().toISOString()
+    });
     saveState();
 
     // System notification
@@ -253,6 +259,29 @@ const notifyUser = (title, body, icon = 'bell') => {
 
     // Refresh UI if on home
     if (state.currentScreen === 'home') render();
+};
+
+// Format notification time (e.g., "2 minutes ago", "1 hour ago")
+const formatNotificationTime = (timestamp) => {
+    if (!timestamp) return '';
+
+    const now = new Date();
+    const notifTime = new Date(timestamp);
+    const diffMs = now - notifTime;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins === 1) return '1 minute ago';
+    if (diffMins < 60) return `${diffMins} minutes ago`;
+    if (diffHours === 1) return '1 hour ago';
+    if (diffHours < 24) return `${diffHours} hours ago`;
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+
+    // For older notifications, show the date
+    return notifTime.toLocaleDateString();
 };
 
 const fetchExchangeRates = async () => {
@@ -739,6 +768,7 @@ const renderHome = (container) => {
                 <div class="notif-content">
                   <h5>${n.title}</h5>
                   <p>${n.body}</p>
+                  <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px; opacity: 0.7">${formatNotificationTime(n.timestamp)}</div>
                 </div>
               </div>
             `).join('')}
@@ -804,6 +834,7 @@ const renderHome = (container) => {
               <div style="flex: 1">
                 <div style="font-size: 14px; font-weight: 600">${n.title}</div>
                 <div style="font-size: 12px; color: var(--text-secondary)">${n.body}</div>
+                <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px; opacity: 0.6">${formatNotificationTime(n.timestamp)}</div>
               </div>
             </div>
           `).join('')}
@@ -1393,17 +1424,17 @@ const renderAdd = (container) => {
     
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px">
       ${[
-            { name: 'Netflix', price: 15.99, color: '#E50914', cat: 'Entertainment', pos: '0 0' },
-            { name: 'Spotify', price: 9.99, color: '#1DB954', cat: 'Entertainment', pos: '33.33% 0' },
-            { name: 'iCloud', price: 9.99, color: '#007AFF', cat: 'Software', pos: '66.66% 0' },
-            { name: 'Disney+', price: 13.99, color: '#006E99', cat: 'Entertainment', pos: '100% 0' },
-            { name: 'Amazon', price: 14.99, color: '#FF9900', cat: 'Shopping', pos: '0 33.33%' },
-            { name: 'Adobe', price: 52.99, color: '#FF021B', cat: 'Software', pos: '33.33% 33.33%' },
-            { name: 'YouTube', price: 13.99, color: '#FF0000', cat: 'Entertainment', pos: '66.66% 33.33%' },
-            { name: 'Slack', price: 12.50, color: '#4A154B', cat: 'Software', pos: '100% 33.33%' }
+            { name: 'Netflix', price: 15.99, color: '#E50914', cat: 'Entertainment', logo: 'netflix.png' },
+            { name: 'Spotify', price: 9.99, color: '#1DB954', cat: 'Entertainment', logo: 'spotify.png' },
+            { name: 'iCloud', price: 9.99, color: '#007AFF', cat: 'Software', logo: 'icloud.png' },
+            { name: 'Disney+', price: 13.99, color: '#006E99', cat: 'Entertainment', logo: 'disney.png' },
+            { name: 'Amazon', price: 14.99, color: '#FF9900', cat: 'Shopping', logo: 'amazon.png' },
+            { name: 'Adobe', price: 52.99, color: '#FF021B', cat: 'Software', logo: 'adobe.png' },
+            { name: 'YouTube', price: 13.99, color: '#FF0000', cat: 'Entertainment', logo: 'youtube.png' },
+            { name: 'Slack', price: 12.50, color: '#4A154B', cat: 'Software', logo: 'slack.png' }
         ].map(p => `
         <div class="preset-card" data-name="${p.name}" data-price="${p.price}" data-color="${p.color}" data-icon="${p.name.charAt(0)}" data-category="${p.cat}" style="background:var(--card-bg); border: 1px solid var(--border-color); border-radius:16px; height:90px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; overflow:hidden; transition: all 0.3s">
-          <div style="width: 40px; height: 40px; background-image: url('logos.png'); background-size: 400% 400%; background-position: ${p.pos}; border-radius: 10px"></div>
+          <div style="width: 40px; height: 40px; background-image: url('${p.logo}'); background-size: cover; background-position: center; border-radius: 10px"></div>
           <div style="font-size:10px; font-weight:600; color: var(--text-primary)">${p.name}</div>
         </div>
       `).join('')}
