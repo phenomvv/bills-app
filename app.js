@@ -105,6 +105,18 @@ window.addEventListener('beforeinstallprompt', (e) => {
     }
 });
 
+// For mobile devices (especially iOS which doesn't support beforeinstallprompt)
+window.addEventListener('load', () => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile && !isPWA && !localStorage.getItem('installBannerDismissed')) {
+        // Wait 2 seconds for page to load, then show banner
+        setTimeout(() => {
+            showInstallBanner();
+        }, 2000);
+    }
+});
+
 // Show install banner
 const showInstallBanner = () => {
     const banner = document.createElement('div');
