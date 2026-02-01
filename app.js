@@ -937,62 +937,153 @@ const renderBills = (container) => {
     // Initial event mapping
     const attachItemEvents = (root) => {
         let touchStartX = 0;
-        let currentSwiped = null;
+        let longPressTimer = null;
+        let contextMenuOpen = null;
 
         root.querySelectorAll('.subscription-item').forEach(item => {
             const container = item.closest('.swipe-container');
 
+            // Click to open detail view
             item.addEventListener('click', (e) => {
-                if (container.classList.contains('swipe-active')) {
-                    container.classList.remove('swipe-active');
-                    item.classList.remove('swipe-active');
-                    currentSwiped = null;
+                // Don't open if context menu is showing
+                if (contextMenuOpen) {
+                    closeContextMenu();
                     return;
                 }
                 openDetailView(parseInt(item.dataset.id));
             });
 
+            // Long press to show context menu
             item.addEventListener('touchstart', (e) => {
-                touchStartX = e.touches[0].clientX;
-                if (currentSwiped && currentSwiped !== container) {
-                    currentSwiped.classList.remove('swipe-active');
-                    currentSwiped.querySelector('.subscription-item').classList.remove('swipe-active');
-                    currentSwiped = null;
+                longPressTimer = setTimeout(() => {
+                    showContextMenu(item, e.touches[0].clientX, e.touches[0].clientY);
+                }, 500); // 500ms long press
+            }, { passive: true });
+
+            item.addEventListener('touchmove', () => {
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
                 }
             }, { passive: true });
 
-            item.addEventListener('touchmove', (e) => {
-                const touchX = e.touches[0].clientX;
-                const diff = touchStartX - touchX;
-                if (diff > 10) { // dragging left
-                    item.style.transform = `translateX(${-Math.min(diff, 80)}px)`;
+            item.addEventListener('touchend', () => {
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
                 }
             }, { passive: true });
 
-            item.addEventListener('touchend', (e) => {
-                const touchEndX = e.changedTouches[0].clientX;
-                const diff = touchStartX - touchEndX;
-
-                item.style.transform = ''; // Clear inline style
-
-                if (diff > 50) {
-                    container.classList.add('swipe-active');
-                    item.classList.add('swipe-active');
-                    currentSwiped = container;
-                } else {
-                    container.classList.remove('swipe-active');
-                    item.classList.remove('swipe-active');
-                    currentSwiped = null;
+            item.addEventListener('touchcancel', () => {
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
                 }
             }, { passive: true });
-        });
 
-        root.querySelectorAll('.swipe-actions').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                deleteSubscription(parseInt(btn.dataset.id));
+            // Desktop: right-click for context menu
+            item.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showContextMenu(item, e.clientX, e.clientY);
             });
         });
+
+        // Function to show context menu
+        const showContextMenu = (item, x, y) => {
+            closeContextMenu(); // Close any existing menu
+
+            const subId = parseInt(item.dataset.id);
+            const sub = state.subscriptions.find(s => s.id === subId);
+            if (!sub) return;
+
+            // Add haptic feedback on mobile
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+
+            const menu = document.createElement('div');
+            menu.className = 'context-menu';
+            menu.style.cssText = `
+                position: fixed;
+                left: ${x}px;
+                top: ${y}px;
+                background: var(--card-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+                z-index: 10000;
+                min-width: 180px;
+                overflow: hidden;
+                animation: scaleIn 0.2s ease-out;
+            `;
+
+            menu.innerHTML = `
+                <div class="context-menu-item" data-action="edit" style="padding: 14px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: background 0.2s">
+                    <i data-lucide="edit-3" style="width: 18px; height: 18px; color: var(--accent-blue)"></i>
+                    <span style="color: var(--text-primary); font-size: 14px">Edit</span>
+                </div>
+                <div style="height: 1px; background: var(--border-color); margin: 0 8px"></div>
+                <div class="context-menu-item" data-action="delete" style="padding: 14px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: background 0.2s">
+                    <i data-lucide="trash-2" style="width: 18px; height: 18px; color: #ef4444"></i>
+                    <span style="color: #ef4444; font-size: 14px">Delete</span>
+                </div>
+            `;
+
+            document.body.appendChild(menu);
+            contextMenuOpen = menu;
+
+            // Position adjustment if menu goes off screen
+            const rect = menu.getBoundingClientRect();
+            if (rect.right > window.innerWidth) {
+                menu.style.left = `${window.innerWidth - rect.width - 10}px`;
+            }
+            if (rect.bottom > window.innerHeight) {
+                menu.style.top = `${window.innerHeight - rect.height - 10}px`;
+            }
+
+            // Add event listeners to menu items
+            menu.querySelectorAll('.context-menu-item').forEach(menuItem => {
+                menuItem.addEventListener('mouseenter', () => {
+                    menuItem.style.background = 'var(--glass-bg)';
+                });
+                menuItem.addEventListener('mouseleave', () => {
+                    menuItem.style.background = 'transparent';
+                });
+                menuItem.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const action = menuItem.dataset.action;
+
+                    if (action === 'edit') {
+                        navigate('edit');
+                        state.editingId = subId;
+                    } else if (action === 'delete') {
+                        if (confirm(`Delete ${sub.name}?`)) {
+                            deleteSubscription(subId);
+                        }
+                    }
+
+                    closeContextMenu();
+                });
+            });
+
+            // Refresh icons
+            if (window.lucide) window.lucide.createIcons();
+
+            // Close menu when clicking outside
+            setTimeout(() => {
+                document.addEventListener('click', closeContextMenu);
+                document.addEventListener('touchstart', closeContextMenu);
+            }, 100);
+        };
+
+        const closeContextMenu = () => {
+            if (contextMenuOpen) {
+                contextMenuOpen.remove();
+                contextMenuOpen = null;
+                document.removeEventListener('click', closeContextMenu);
+                document.removeEventListener('touchstart', closeContextMenu);
+            }
+        };
 
         if (window.lucide) window.lucide.createIcons();
     };
@@ -1472,17 +1563,10 @@ const renderAddCustom = (container) => {
       <input type="text" id="custom-name" value="${state.selectedPreset?.name || ''}" placeholder="e.g. Disney+" required style="width: 100%; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; color: var(--text-primary); outline: none; border-bottom: 2px solid ${state.selectedPreset?.color || 'transparent'}; transition: all 0.3s">
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
-      <div class="input-group">
-        <label style="color: var(--text-secondary); font-size: 13px; margin-bottom: 8px; display: block">${t('price')}</label>
-        <input type="number" step="0.01" id="custom-price" value="${state.selectedPreset?.price || ''}" placeholder="0.00" required style="width: 100%; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; color: var(--text-primary); outline: none">
-      </div>
-      <div class="input-group">
-        <label style="color: var(--text-secondary); font-size: 13px; margin-bottom: 8px; display: block">${t('currency')}</label>
-        <select id="custom-currency" style="width: 100%; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; color: var(--text-primary); outline: none; appearance: none">
-          ${Object.keys(CURRENCIES).map(curr => `<option value="${curr}" ${state.preferences.currency === curr ? 'selected' : ''}>${curr}</option>`).join('')}
-        </select>
-      </div>
+
+    <div class="input-group">
+      <label style="color: var(--text-secondary); font-size: 13px; margin-bottom: 8px; display: block">${t('price')}</label>
+      <input type="number" step="0.01" id="custom-price" value="${state.selectedPreset?.price || ''}" placeholder="0.00" required style="width: 100%; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; color: var(--text-primary); outline: none">
     </div>
 
     <div class="input-group">
@@ -1564,7 +1648,7 @@ const renderAddCustom = (container) => {
         e.preventDefault();
         const name = document.getElementById('custom-name').value;
         const price = parseFloat(document.getElementById('custom-price').value);
-        const currency = document.getElementById('custom-currency').value;
+        const currency = state.preferences.currency; // Use currency from settings
         const billingCycle = document.getElementById('custom-billing-cycle').value;
         const category = document.getElementById('custom-category').value;
         const color = document.getElementById('custom-color').value;

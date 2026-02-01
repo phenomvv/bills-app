@@ -748,6 +748,7 @@ select:focus {
     opacity: 0.6;
 }
 
+
 /* Install Banner Animation */
 @keyframes slideUp {
     from {
@@ -757,6 +758,19 @@ select:focus {
 
     to {
         transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Context Menu Animation */
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
         opacity: 1;
     }
 }
