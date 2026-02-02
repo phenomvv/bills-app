@@ -370,7 +370,9 @@ const TRANSLATIONS = {
     dueInDays: "Due in {n} days",
     overdue: "Overdue",
     noDueDate: "No due date",
-    search: "Search"
+    search: "Search",
+    monthlySub: "Monthly Subscriptions",
+    yearlySub: "Yearly Subscriptions"
   },
   es: {
     welcomeBack: "Bienvenido de nuevo",
@@ -442,7 +444,9 @@ const TRANSLATIONS = {
     dueInDays: "Vence en {n} días",
     overdue: "Vencido",
     noDueDate: "Sin fecha de vencimiento",
-    search: "Buscar"
+    search: "Buscar",
+    monthlySub: "Suscripciones mensuales",
+    yearlySub: "Suscripciones anuales"
   }
 };
 
@@ -553,6 +557,51 @@ const getDaysUntilDue = (sub) => {
   return Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
 };
 
+// Smart auto-tagging based on service name
+const getSmartCategory = (serviceName) => {
+  const name = serviceName.toLowerCase();
+
+  // Entertainment keywords
+  if (name.includes('netflix') || name.includes('disney') || name.includes('hulu') ||
+    name.includes('hbo') || name.includes('prime video') || name.includes('apple tv') ||
+    name.includes('paramount') || name.includes('peacock') || name.includes('spotify') ||
+    name.includes('apple music') || name.includes('youtube') || name.includes('tidal') ||
+    name.includes('soundcloud') || name.includes('pandora')) {
+    return 'Entertainment';
+  }
+
+  // Software/Productivity keywords
+  if (name.includes('adobe') || name.includes('microsoft') || name.includes('office') ||
+    name.includes('dropbox') || name.includes('google') || name.includes('icloud') ||
+    name.includes('notion') || name.includes('evernote') || name.includes('slack') ||
+    name.includes('zoom') || name.includes('github') || name.includes('figma') ||
+    name.includes('canva') || name.includes('grammarly')) {
+    return 'Software';
+  }
+
+  // Shopping keywords
+  if (name.includes('amazon') || name.includes('costco') || name.includes('walmart') ||
+    name.includes('target') || name.includes('ebay') || name.includes('etsy')) {
+    return 'Shopping';
+  }
+
+  // Fitness keywords
+  if (name.includes('gym') || name.includes('fitness') || name.includes('peloton') ||
+    name.includes('strava') || name.includes('myfitnesspal') || name.includes('headspace') ||
+    name.includes('calm') || name.includes('yoga')) {
+    return 'Fitness';
+  }
+
+  // News keywords
+  if (name.includes('news') || name.includes('times') || name.includes('post') ||
+    name.includes('journal') || name.includes('medium') || name.includes('substack')) {
+    return 'News';
+  }
+
+  // Default to Other
+  return 'Other';
+};
+
 // Calculate lifetime spending (estimated based on current price)
 const calculateLifetimeSpend = (sub) => {
   if (!sub.startDate) return null;
@@ -609,7 +658,8 @@ const addSubscription = (sub) => {
     ...sub,
     id: Date.now(),
     dueDate: sub.dueDate || defaultDueDate.toISOString().split('T')[0],
-    billingCycle: sub.billingCycle || 'monthly'
+    billingCycle: sub.billingCycle || 'monthly',
+    category: sub.category || getSmartCategory(sub.name) // Smart auto-tagging
   };
   state.subscriptions.push(newSub);
   saveState();
@@ -719,7 +769,7 @@ const render = () => {
       renderBills(main);
       break;
     case 'stats':
-      renderStats(main);
+      renderInsights(main);
       break;
     case 'account':
       renderAccount(main);
@@ -796,10 +846,19 @@ const renderHome = (container) => {
         </span>
       </div>
       <div class="spend-amount">${formatPrice(totalSpendFormatted)}</div>
-      <div class="chart-container">
-        <canvas id="mainChart"></canvas>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px">
+        <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; text-align: center">
+          <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 4px">Monthly</div>
+          <div style="font-size: 24px; font-weight: 700">${formatPrice(totalSpendFormatted)}</div>
+        </div>
+        <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; text-align: center">
+          <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 4px">Yearly</div>
+          <div style="font-size: 24px; font-weight: 700">${formatPrice((parseFloat(totalSpendFormatted) * 12).toFixed(0))}</div>
+        </div>
       </div>
-      <button class="insights-btn" id="insights-btn">
+      
+      <button class="insights-btn" id="insights-btn" style="margin-top: 20px">
         ${t('viewInsights')} <i data-lucide="arrow-right" style="width:16px"></i>
       </button>
     </section>
@@ -884,11 +943,10 @@ const renderHome = (container) => {
     render();
   });
 
+
   container.querySelectorAll('.clickable-bill').forEach(card => {
     card.addEventListener('click', () => openDetailView(parseInt(card.dataset.id)));
   });
-
-  initHomeCharts();
 };
 
 const renderBills = (container) => {
@@ -910,7 +968,7 @@ const renderBills = (container) => {
           ${getServiceLogoHTML(sub.name, sub.color, sub.icon, 44)}
           <div class="item-info">
             <div class="item-title">${sub.name}</div>
-            <div class="item-subtitle">${CATEGORY_MAP[state.preferences.language][sub.category] || sub.category} • ${sub.billingCycle || 'monthly'}</div>
+            <div class="item-subtitle">${sub.category ? (CATEGORY_MAP[state.preferences.language][sub.category] || sub.category) : 'Other'} • ${sub.billingCycle || 'monthly'}</div>
           </div>
           <div class="item-meta">
             <div class="item-price">${formatPrice(sub.price)}${cycleLabel}</div>
@@ -925,6 +983,10 @@ const renderBills = (container) => {
     .filter(sub => sub.name.toLowerCase().includes(searchQuery.toLowerCase()))
     .sort((a, b) => getDaysUntilDue(a) - getDaysUntilDue(b));
 
+  const monthlyBills = initialFiltered.filter(sub => sub.billingCycle === 'monthly' || !sub.billingCycle);
+  const yearlyBills = initialFiltered.filter(sub => sub.billingCycle === 'yearly');
+  const weeklyBills = initialFiltered.filter(sub => sub.billingCycle === 'weekly');
+
   container.innerHTML = `
     <div class="section-title" style="margin-top: 10px; margin-bottom: 24px">
       <h2 style="font-family: var(--font-heading); font-size: 28px">${t('bills')}</h2>
@@ -937,11 +999,33 @@ const renderBills = (container) => {
       </div>
     </div>
 
-    <h4 style="color: var(--text-secondary); font-size: 12px; letter-spacing: 1px; margin-bottom: 16px; text-transform: uppercase">${t('activeServices')}</h4>
-    
-    <div class="subscriptions-list">
-      ${renderListHTML(initialFiltered)}
-    </div>
+    ${weeklyBills.length > 0 ? `
+      <h4 style="color: var(--text-secondary); font-size: 12px; letter-spacing: 1px; margin-bottom: 16px; text-transform: uppercase">Weekly Subscriptions</h4>
+      <div class="subscriptions-list" style="margin-bottom: 32px">
+        ${renderListHTML(weeklyBills)}
+      </div>
+    ` : ''}
+
+    ${monthlyBills.length > 0 ? `
+      <h4 style="color: var(--text-secondary); font-size: 12px; letter-spacing: 1px; margin-bottom: 16px; text-transform: uppercase">${t('monthlySub')}</h4>
+      <div class="subscriptions-list" style="margin-bottom: 32px">
+        ${renderListHTML(monthlyBills)}
+      </div>
+    ` : ''}
+
+    ${yearlyBills.length > 0 ? `
+      <h4 style="color: var(--text-secondary); font-size: 12px; letter-spacing: 1px; margin-bottom: 16px; text-transform: uppercase">${t('yearlySub')}</h4>
+      <div class="subscriptions-list">
+        ${renderListHTML(yearlyBills)}
+      </div>
+    ` : ''}
+
+    ${initialFiltered.length === 0 ? `
+      <div style="text-align: center; padding: 48px 20px; color: var(--text-secondary)">
+        <i data-lucide="search-x" style="width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.5"></i>
+        <p>No subscriptions found matching your search.</p>
+      </div>
+    ` : ''}
   `;
 
   // Initial event mapping
@@ -1133,7 +1217,7 @@ const renderBills = (container) => {
   });
 };
 
-const renderStats = (container) => {
+const renderInsights = (container) => {
   const totalSpend = state.subscriptions.reduce((sum, sub) => sum + sub.price, 0).toFixed(2);
 
   // Calculate category breakdown
@@ -1150,7 +1234,7 @@ const renderStats = (container) => {
 
   container.innerHTML = `
   <div class="section-title" style="margin-top: 10px; margin-bottom: 24px" >
-      <h2 style="font-family: var(--font-heading); font-size: 28px">${t('analytics')}</h2>
+      <h2 style="font-family: var(--font-heading); font-size: 28px">Insights</h2>
       <button class="icon-button"><i data-lucide="download"></i></button>
     </div>
 
@@ -1160,19 +1244,19 @@ const renderStats = (container) => {
         <div style="font-size: 48px; font-weight: 700; font-family: var(--font-heading)">${formatPrice(totalSpend)}</div>
         <div style="color: var(--text-secondary); font-size: 13px; margin-top: 4px">${state.subscriptions.length} active subscriptions</div>
       </div>
-      
-      <div style="height: 200px; margin-bottom: 20px">
-        <canvas id="statsBarChart"></canvas>
-      </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px">
         <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; text-align: center">
           <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 4px">${t('avgService')}</div>
-          <div style="font-size: 24px; font-weight: 700">${formatPrice((parseFloat(totalSpend) / state.subscriptions.length).toFixed(2))}</div>
+          <div style="font-size: 20px; font-weight: 700">${formatPrice((parseFloat(totalSpend) / state.subscriptions.length).toFixed(2))}</div>
+        </div>
+        <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; text-align: center">
+          <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 4px">Daily Cost</div>
+          <div style="font-size: 20px; font-weight: 700">${formatPrice((parseFloat(totalSpend) / 30).toFixed(2))}</div>
         </div>
         <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; text-align: center">
           <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 4px">${t('yearlyCost')}</div>
-          <div style="font-size: 24px; font-weight: 700">${formatPrice((parseFloat(totalSpend) * 12).toFixed(0))}</div>
+          <div style="font-size: 20px; font-weight: 700">${formatPrice((parseFloat(totalSpend) * 12).toFixed(0))}</div>
         </div>
       </div>
     </section>
@@ -1225,46 +1309,10 @@ const renderStats = (container) => {
     }
 `;
 
-  // Initialize charts
-  setTimeout(() => {
-    const barCtx = document.getElementById('statsBarChart').getContext('2d');
-    const doughnutCtx = document.getElementById('statsDoughnutChart').getContext('2d');
 
-    new Chart(barCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [{
-          label: 'Monthly Spend',
-          data: [totalSpend * 0.9, totalSpend * 0.95, totalSpend, totalSpend * 1.05, totalSpend * 0.98, totalSpend],
-          backgroundColor: '#2563eb',
-          borderRadius: 8,
-          borderSkipped: false,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (context) => '$' + context.parsed.y.toFixed(2)
-            }
-          }
-        },
-        scales: {
-          x: {
-            grid: { display: false },
-            ticks: { color: getThemeColors().chartTicks }
-          },
-          y: {
-            grid: { color: getThemeColors().chartGrid },
-            ticks: { color: getThemeColors().chartTicks }
-          }
-        }
-      }
-    });
+  // Initialize doughnut chart
+  setTimeout(() => {
+    const doughnutCtx = document.getElementById('statsDoughnutChart').getContext('2d');
 
     const colors = ['#f43f5e', '#2563eb', '#10b981', '#f59e0b', '#8b5cf6'];
     new Chart(doughnutCtx, {
@@ -1697,17 +1745,6 @@ const renderEdit = (container) => {
       </div>
       <h2 style="font-family: var(--font-heading); margin: 0 0 4px 0">${sub.name}</h2>
       <div style="color: var(--text-secondary); font-size: 14px">${CATEGORY_MAP[state.preferences.language][sub.category] || sub.category}</div>
-      ${(() => {
-      const lifetime = calculateLifetimeSpend(sub);
-      if (lifetime && lifetime.periods > 0) {
-        return `<div style="margin-top: 12px; padding: 12px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px">
-            <div style="font-size: 12px; color: var(--text-secondary)">Estimated Lifetime Spend</div>
-            <div style="font-size: 24px; font-weight: 700; color: #f43f5e">${formatPrice(lifetime.amount)}</div>
-            <div style="font-size: 11px; color: var(--text-secondary)">${lifetime.periods} ${lifetime.periodLabel} subscribed</div>
-          </div>`;
-      }
-      return '';
-    })()}
     </div>
 
     <form id="edit-sub-form" style="display: flex; flex-direction: column; gap: 20px">
@@ -1834,124 +1871,6 @@ const renderEdit = (container) => {
   });
 };
 
-const renderInsights = (container) => {
-  const totalSpend = state.subscriptions.reduce((sum, sub) => sum + sub.price, 0);
-  const yearlySpend = totalSpend * 12;
-
-  // Category analysis
-  const categoryTotals = state.subscriptions.reduce((acc, sub) => {
-    acc[sub.category] = (acc[sub.category] || 0) + sub.price;
-    return acc;
-  }, {});
-
-  const topCategory = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1])[0];
-  const mostExpensive = state.subscriptions.reduce((max, sub) => sub.price > max.price ? sub : max, state.subscriptions[0]);
-
-  // Simulated savings suggestions
-  const savings = [
-    { title: 'Switch to annual billing', description: 'Save ~15% on Netflix and Spotify', amount: (totalSpend * 0.15).toFixed(2) },
-    { title: 'Bundle services', description: 'Combine streaming services for discounts', amount: '12.99' },
-    { title: 'Remove duplicates', description: 'You have 2 music streaming services', amount: '9.99' }
-  ];
-
-  container.innerHTML = `
-  <div class="section-title" style="margin-top: 10px; margin-bottom: 24px" >
-      <button class="icon-button" onclick="navigate('home')"><i data-lucide="chevron-left"></i></button>
-      <h3 style="font-family: var(--font-heading)">${t('viewInsights')}</h3>
-      <button class="icon-button"><i data-lucide="share-2"></i></button>
-    </div>
-
-    <section class="spend-card" style="padding: 24px; text-align: center">
-      <div style="color: var(--text-secondary); font-size: 14px; margin-bottom: 8px">${t('yearlyCost')}</div>
-      <div style="font-size: 48px; font-weight: 700; font-family: var(--font-heading); color: #f43f5e">${formatPrice(yearlySpend.toFixed(2))}</div>
-      <div style="color: var(--text-secondary); font-size: 13px; margin-top: 4px">That's ${formatPrice((yearlySpend / 365).toFixed(2))} per day</div>
-    </section>
-
-    <h4 style="color: var(--text-secondary); font-size: 12px; letter-spacing: 1px; margin-bottom: 16px; margin-top: 32px; text-transform: uppercase">${t('analytics')}</h4>
-    
-    <div class="subscription-item" style="margin-bottom: 12px">
-      <div class="icon-button" style="background: rgba(244, 63, 94, 0.1); color: #f43f5e"><i data-lucide="trending-up"></i></div>
-      <div class="item-info">
-        <div class="item-title">Biggest Expense</div>
-        <div class="item-subtitle">${mostExpensive.name} at ${formatPrice(mostExpensive.price)}/mo</div>
-      </div>
-    </div>
-
-    <div class="subscription-item" style="margin-bottom: 12px">
-      <div class="icon-button" style="background: rgba(37, 99, 235, 0.1); color: var(--accent-blue)"><i data-lucide="pie-chart"></i></div>
-      <div class="item-info">
-        <div class="item-title">Top Category</div>
-        <div class="item-subtitle">${topCategory[0]} - ${formatPrice(topCategory[1].toFixed(2))}/mo</div>
-      </div>
-    </div>
-
-    <div class="subscription-item" style="margin-bottom: 12px">
-      <div class="icon-button" style="background: rgba(16, 185, 129, 0.1); color: #10b981"><i data-lucide="layers"></i></div>
-      <div class="item-info">
-        <div class="item-title">Total Services</div>
-        <div class="item-subtitle">${state.subscriptions.length} active subscriptions</div>
-      </div>
-    </div>
-
-    <h4 style="color: var(--text-secondary); font-size: 12px; letter-spacing: 1px; margin-bottom: 16px; margin-top: 32px; text-transform: uppercase">Money-Saving Tips</h4>
-    
-    ${savings.map(tip => `
-      <div class="subscription-item" style="margin-bottom: 12px; border: 1px solid var(--border-color)">
-        <div class="icon-button" style="background: rgba(16, 185, 129, 0.1); color: #10b981"><i data-lucide="lightbulb"></i></div>
-        <div class="item-info" style="flex: 1">
-          <div class="item-title">${tip.title}</div>
-          <div class="item-subtitle">${tip.description}</div>
-        </div>
-        <div style="text-align: right">
-          <div style="color: #10b981; font-weight: 700">-${formatPrice(tip.amount)}</div>
-          <div style="font-size: 11px; color: var(--text-secondary)">/mo</div>
-        </div>
-      </div>
-    `).join('')
-    }
-
-<div style="margin-top: 32px; padding: 20px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; text-align: center">
-  <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px">Potential Monthly Savings</div>
-  <div style="font-size: 32px; font-weight: 700; color: #10b981; font-family: var(--font-heading)">${formatPrice(savings.reduce((sum, s) => sum + parseFloat(s.amount), 0).toFixed(2))}</div>
-</div>
-`;
-};
-
-/**
- * Charts Initialization
- */
-const initHomeCharts = () => {
-  const mainChartElem = document.getElementById('mainChart');
-  if (!mainChartElem) return;
-
-  const ctx = mainChartElem.getContext('2d');
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      datasets: [{
-        data: [12, 19, 13, 15, 22, 10, 15],
-        backgroundColor: (context) => {
-          if (context.dataIndex === 4) return '#2563eb';
-          return getThemeColors().chartBarInactive;
-        },
-        borderRadius: 8,
-        borderSkipped: false,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { display: false },
-        y: { display: false }
-      }
-    }
-  });
-};
-
 /**
  * App Boot
  */
@@ -2061,14 +1980,22 @@ const renderDetail = (container) => {
 
   const daysUntil = getDaysUntilDue(sub);
   const dueText = daysUntil === 0 ? 'Due today' : daysUntil === 1 ? 'Due tomorrow' : daysUntil < 0 ? `Overdue by ${Math.abs(daysUntil)} days` : `Coming up in ${daysUntil} days`;
+  const lifetime = calculateLifetimeSpend(sub);
+
+  // Debug logging
+  console.log('Subscription data:', sub);
+  console.log('Lifetime calculation:', lifetime);
 
   container.innerHTML = `
     <div style="min-height: 100vh; background: var(--bg-primary); padding: 20px">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px">
+        <button class="icon-button" onclick="navigate('bills')">
+          <i data-lucide="chevron-left"></i>
+        </button>
         <button class="icon-button" id="menu-btn" style="position: relative">
           <i data-lucide="more-horizontal"></i>
         </button>
-        <div id="menu-dropdown" style="display: none; position: absolute; top: 60px; left: 20px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 8px; z-index: 100; min-width: 150px">
+        <div id="menu-dropdown" style="display: none; position: absolute; top: 60px; right: 20px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 8px; z-index: 100; min-width: 150px">
           <button id="edit-option" style="width: 100%; text-align: left; padding: 12px; background: none; border: none; color: var(--text-primary); cursor: pointer; border-radius: 8px; display: flex; align-items: center; gap: 8px">
             <i data-lucide="edit-3" style="width: 16px"></i> Edit
           </button>
@@ -2076,9 +2003,6 @@ const renderDetail = (container) => {
             <i data-lucide="trash-2" style="width: 16px"></i> Delete
           </button>
         </div>
-        <button class="icon-button" onclick="navigate('bills')">
-          <i data-lucide="x"></i>
-        </button>
       </div>
 
       <div style="text-align: center; margin-bottom: 40px">
@@ -2087,12 +2011,20 @@ const renderDetail = (container) => {
         </div>
         <div style="color: var(--text-secondary); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px">${CATEGORY_MAP[state.preferences.language][sub.category] || sub.category}</div>
         <h1 style="font-family: var(--font-heading); font-size: 32px; margin: 0 0 8px 0">${sub.name}</h1>
-        <div style="color: var(--text-secondary); font-size: 14px; text-transform: uppercase; letter-spacing: 1px">${sub.billingCycle || 'monthly'} subscription</div>
+        <div style="color: var(--text-secondary); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px">${sub.billingCycle || 'monthly'} subscription</div>
       </div>
 
-      <div style="background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px; margin-bottom: 20px; text-align: center">
+      <div style="background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; margin-bottom: 20px; text-align: center">
         <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 8px">${dueText} for ${formatPrice(sub.price, sub.currency)}</div>
       </div>
+
+      ${lifetime && lifetime.periods > 0 ? `
+        <div style="background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; margin-bottom: 20px; text-align: center">
+          <div style="color: var(--text-secondary); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px">${t('lifetimeSpend')}</div>
+          <div style="font-size: 32px; font-weight: 700; color: #f43f5e; margin-bottom: 4px">${formatPrice(lifetime.amount, sub.currency)}</div>
+          <div style="font-size: 12px; color: var(--text-secondary)">${lifetime.periods} ${lifetime.periodLabel} subscribed</div>
+        </div>
+      ` : ''}
     </div>
   `;
 
