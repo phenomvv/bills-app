@@ -67,20 +67,26 @@ let state = {
   },
   subscriptions: JSON.parse(localStorage.getItem('subscriptions')) || [
     { id: 1, name: 'Netflix', price: 15.99, currency: 'USD', category: 'Entertainment', billingDay: 5, billingCycle: 'monthly', startDate: '2020-03-01', icon: 'N', color: '#E50914' },
-    { id: 2, name: 'Spotify', price: 9.99, currency: 'GBP', category: 'Entertainment', billingDay: 15, billingCycle: 'monthly', startDate: '2019-06-15', icon: 'S', color: '#1DB954' },
+    { id: 2, name: 'Spotify', price: 9.99, currency: 'USD', category: 'Entertainment', billingDay: 15, billingCycle: 'monthly', startDate: '2019-06-15', icon: 'S', color: '#1DB954' },
     { id: 3, name: 'iCloud+', price: 9.99, currency: 'USD', category: 'Software', billingDay: 12, billingCycle: 'monthly', startDate: '2021-01-12', icon: 'C', color: '#007AFF' },
-    { id: 4, name: 'Adobe CC', price: 52.99, currency: 'EUR', category: 'Software', billingDay: 22, billingCycle: 'monthly', startDate: '2022-09-01', icon: 'Ai', color: '#FF0000' },
+    { id: 4, name: 'Adobe CC', price: 52.99, currency: 'USD', category: 'Software', billingDay: 22, billingCycle: 'monthly', startDate: '2022-09-01', icon: 'Ai', color: '#FF0000' },
     { id: 5, name: 'YouTube Premium', price: 13.99, currency: 'USD', category: 'Entertainment', billingDay: 28, billingCycle: 'monthly', startDate: '2023-02-28', icon: 'Y', color: '#FF0000' }
   ],
   notifications: JSON.parse(localStorage.getItem('notifications')) || [
-    { id: Date.now(), title: "Welcome to Bills!", body: "Tap to clear this notification. Swiping simulated.", icon: "star" },
     { id: Date.now() + 1, title: "Currency Rates Updated", body: "We've fetched the latest rates for USD, MXN, GBP, and EUR.", icon: "refresh-cw" }
   ],
   exchangeRates: JSON.parse(localStorage.getItem('exchangeRates')) || { USD: 1, MXN: 17.5, GBP: 0.79, EUR: 0.92 },
   currentScreen: 'home',
   isLocked: false,
-  selectedPreset: null
 };
+
+// Force USD update if needed
+if (state.preferences.currency !== 'USD') {
+  state.preferences.currency = 'USD';
+  // Note: saveState is defined later, so we'll just update localStorage directly here or wait.
+  // Actually, we can just let the app run and the first save will fix it,
+  // but to be safe we'll update the object and it will be used for all renders.
+}
 
 // Auto-lock if biometric enabled
 if (state.user.biometricEnabled) {
@@ -187,7 +193,9 @@ const getServiceLogoHTML = (name, color, icon, size = 44) => {
     'amazon': 'amazon.png',
     'adobe': 'adobe.png',
     'youtube': 'youtube.png',
-    'slack': 'slack.png'
+    'slack': 'slack.png',
+    'coinbase': 'coinbase.png',
+    'tesla': 'tesla.png'
   };
 
   const lowerName = name.toLowerCase();
@@ -210,10 +218,14 @@ const getServiceLogoHTML = (name, color, icon, size = 44) => {
     logoFile = serviceLogos['youtube'];
   } else if (lowerName.includes('slack')) {
     logoFile = serviceLogos['slack'];
+  } else if (lowerName.includes('coinbase')) {
+    logoFile = serviceLogos['coinbase'];
+  } else if (lowerName.includes('tesla')) {
+    logoFile = serviceLogos['tesla'];
   }
 
   if (logoFile) {
-    return `<div style="width: ${size}px; height: ${size}px; background-image: url('${logoFile}'); background-size: cover; background-position: center; border-radius: ${size / 4}px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15)"></div>`;
+    return `<div style="width: ${size}px; height: ${size}px; background-image: url('${logoFile}?v=edge'); background-size: cover; background-position: center; border-radius: ${size / 3.5}px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.25)"></div>`;
   }
 
   return `
@@ -1564,14 +1576,9 @@ const renderAdd = (container) => {
       <button class="icon-button" onclick="navigate('home')"><i data-lucide="x"></i></button>
     </div>
 
-    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 32px">
-      <i data-lucide="search" style="color: var(--text-secondary)"></i>
-      <input type="text" placeholder="${t('search')}..." style="background:none; border:none; color:var(--text-primary); width:100%; outline:none; font-size:16px">
-    </div>
-
-    <h4 style="color: var(--text-secondary); font-size: 12px; letter-spacing: 1px; margin-bottom: 16px; text-transform: uppercase">${t('popularServices')}</h4>
+    <h4 style="color: var(--text-secondary); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 20px; text-transform: uppercase; opacity: 0.8">${t('popularServices')}</h4>
     
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px">
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px">
       ${[
       { name: 'Netflix', price: 15.99, color: '#E50914', cat: 'Entertainment', logo: 'netflix.png' },
       { name: 'Spotify', price: 9.99, color: '#1DB954', cat: 'Entertainment', logo: 'spotify.png' },
@@ -1580,17 +1587,19 @@ const renderAdd = (container) => {
       { name: 'Amazon', price: 14.99, color: '#FF9900', cat: 'Shopping', logo: 'amazon.png' },
       { name: 'Adobe', price: 52.99, color: '#FF021B', cat: 'Software', logo: 'adobe.png' },
       { name: 'YouTube', price: 13.99, color: '#FF0000', cat: 'Entertainment', logo: 'youtube.png' },
-      { name: 'Slack', price: 12.50, color: '#4A154B', cat: 'Software', logo: 'slack.png' }
+      { name: 'Slack', price: 12.50, color: '#4A154B', cat: 'Software', logo: 'slack.png' },
+      { name: 'Coinbase', price: 0.00, color: '#0052FF', cat: 'Finance', logo: 'coinbase.png' },
+      { name: 'Tesla', price: 9.99, color: '#E31937', cat: 'Auto', logo: 'tesla.png' }
     ].map(p => `
-        <div class="preset-card" data-name="${p.name}" data-price="${p.price}" data-color="${p.color}" data-icon="${p.name.charAt(0)}" data-category="${p.cat}" style="background:var(--card-bg); border: 1px solid var(--border-color); border-radius:16px; height:90px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; overflow:hidden; transition: all 0.3s">
-          <div style="width: 40px; height: 40px; background-image: url('${p.logo}'); background-size: cover; background-position: center; border-radius: 10px"></div>
-          <div style="font-size:10px; font-weight:600; color: var(--text-primary)">${p.name}</div>
+        <div class="preset-card" data-name="${p.name}" data-price="${p.price}" data-color="${p.color}" data-icon="${p.name.charAt(0)}" data-category="${p.cat}" style="background:var(--card-bg); border: 1px solid var(--border-color); border-radius:20px; height:100px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; cursor:pointer; overflow:hidden; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); box-shadow: 0 4px 20px rgba(0,0,0,0.15)">
+          <div style="width: 48px; height: 48px; background-image: url('${p.logo}?v=edge'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2)"></div>
+          <div style="font-size:11px; font-weight:500; color: var(--text-primary); opacity: 0.9">${p.name}</div>
         </div>
       `).join('')}
     </div>
 
-    <button id="custom-service-btn" class="insights-btn" style="background: var(--glass-bg); border: 1px solid var(--border-color); color: var(--text-primary); margin-top: 32px">
-      <i data-lucide="plus" style="width:16px"></i> ${t('customService')}
+    <button id="custom-service-btn" class="insights-btn" style="background: var(--glass-bg); border: 1px solid var(--border-color); color: var(--text-primary); margin-top: 40px; border-radius: 20px; height: 56px; font-size: 15px">
+      <i data-lucide="plus" style="width:18px"></i> ${t('customService')}
     </button>
 `;
 
@@ -1981,10 +1990,6 @@ const renderDetail = (container) => {
   const daysUntil = getDaysUntilDue(sub);
   const dueText = daysUntil === 0 ? 'Due today' : daysUntil === 1 ? 'Due tomorrow' : daysUntil < 0 ? `Overdue by ${Math.abs(daysUntil)} days` : `Coming up in ${daysUntil} days`;
   const lifetime = calculateLifetimeSpend(sub);
-
-  // Debug logging
-  console.log('Subscription data:', sub);
-  console.log('Lifetime calculation:', lifetime);
 
   container.innerHTML = `
     <div style="min-height: 100vh; background: var(--bg-primary); padding: 20px">
