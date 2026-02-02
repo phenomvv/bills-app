@@ -18,9 +18,29 @@ const CATEGORY_MAP = {
     'Entertainment': 'Entretenimiento', 'Software': 'Software', 'Lifestyle': 'Estilo de vida',
     'Utilities': 'Servicios', 'Auto': 'Automóvil', 'Health': 'Salud',
     'Finance': 'Finanzas', 'Education': 'Educación', 'Food': 'Comida',
-    'Shopping': 'Compras', 'Other': 'Otro'
+    'Shopping': 'Compras', 'Other': 'Otros'
   }
 };
+
+const PRESET_SERVICES = [
+  { name: 'Netflix', price: 15.99, color: '#E50914', cat: 'Entertainment', logo: 'netflix.png' },
+  { name: 'Spotify', price: 9.99, color: '#1DB954', cat: 'Entertainment', logo: 'spotify.png' },
+  { name: 'iCloud', price: 9.99, color: '#007AFF', cat: 'Software', logo: 'icloud.png' },
+  { name: 'Disney+', price: 13.99, color: '#006E99', cat: 'Entertainment', logo: 'disney.png' },
+  { name: 'Amazon', price: 14.99, color: '#FF9900', cat: 'Shopping', logo: 'amazon.png' },
+  { name: 'Adobe', price: 52.99, color: '#FF021B', cat: 'Software', logo: 'adobe.png' },
+  { name: 'YouTube', price: 13.99, color: '#FF0000', cat: 'Entertainment', logo: 'youtube.png' },
+  { name: 'Slack', price: 12.50, color: '#4A154B', cat: 'Software', logo: 'slack.png' },
+  { name: 'Coinbase', price: 0.00, color: '#0052FF', cat: 'Finance', logo: 'coinbase.png' },
+  { name: 'Tesla', price: 9.99, color: '#E31937', cat: 'Auto', logo: 'tesla.png' },
+  { name: 'T-Mobile', price: 70.00, color: '#E20074', cat: 'Utilities', logo: 'tmobile.png' },
+  { name: 'Xfinity', price: 80.00, color: '#FF0000', cat: 'Utilities', logo: 'xfinity.png' },
+  { name: 'Apple Music', price: 10.99, color: '#FB233B', cat: 'Entertainment', logo: 'applemusic.png' },
+  { name: 'American Airlines', price: 0.00, color: '#0078D2', cat: 'Lifestyle', logo: 'americanairlines.png' },
+  { name: 'Chase', price: 0.00, color: '#117ACA', cat: 'Finance', logo: 'chase.png' }
+];
+
+const APP_VERSION = '1.2.0';
 
 // Currency options
 const CURRENCIES = {
@@ -76,8 +96,10 @@ let state = {
     { id: Date.now() + 1, title: "Currency Rates Updated", body: "We've fetched the latest rates for USD, MXN, GBP, and EUR.", icon: "refresh-cw" }
   ],
   exchangeRates: JSON.parse(localStorage.getItem('exchangeRates')) || { USD: 1, MXN: 17.5, GBP: 0.79, EUR: 0.92 },
+  servicePopularity: JSON.parse(localStorage.getItem('servicePopularity')) || {},
   currentScreen: 'home',
   isLocked: false,
+  selectedPreset: null
 };
 
 // Force USD update if needed
@@ -87,6 +109,15 @@ if (state.preferences.currency !== 'USD') {
   // Actually, we can just let the app run and the first save will fix it,
   // but to be safe we'll update the object and it will be used for all renders.
 }
+
+// Check for app update and notify
+const lastVersion = localStorage.getItem('appVersion');
+if (lastVersion && lastVersion !== APP_VERSION) {
+  setTimeout(() => {
+    notifyUser("New Update Available", `Welcome to version ${APP_VERSION}! We've added more service logos and dynamic popularity ranking.`, "sparkles");
+  }, 2000);
+}
+localStorage.setItem('appVersion', APP_VERSION);
 
 // Auto-lock if biometric enabled
 if (state.user.biometricEnabled) {
@@ -195,7 +226,13 @@ const getServiceLogoHTML = (name, color, icon, size = 44) => {
     'youtube': 'youtube.png',
     'slack': 'slack.png',
     'coinbase': 'coinbase.png',
-    'tesla': 'tesla.png'
+    'tesla': 'tesla.png',
+    'tmobile': 'tmobile.png',
+    't-mobile': 'tmobile.png',
+    'xfinity': 'xfinity.png',
+    'apple music': 'applemusic.png',
+    'american airlines': 'americanairlines.png',
+    'chase': 'chase.png'
   };
 
   const lowerName = name.toLowerCase();
@@ -222,6 +259,16 @@ const getServiceLogoHTML = (name, color, icon, size = 44) => {
     logoFile = serviceLogos['coinbase'];
   } else if (lowerName.includes('tesla')) {
     logoFile = serviceLogos['tesla'];
+  } else if (lowerName.includes('tmobile') || lowerName.includes('t-mobile')) {
+    logoFile = serviceLogos['tmobile'];
+  } else if (lowerName.includes('xfinity')) {
+    logoFile = serviceLogos['xfinity'];
+  } else if (lowerName.includes('apple music')) {
+    logoFile = serviceLogos['apple music'];
+  } else if (lowerName.includes('american airlines')) {
+    logoFile = serviceLogos['american airlines'];
+  } else if (lowerName.includes('chase')) {
+    logoFile = serviceLogos['chase'];
   }
 
   if (logoFile) {
@@ -656,9 +703,12 @@ const applyTheme = () => {
 };
 
 const saveState = () => {
-  localStorage.setItem('subscriptions', JSON.stringify(state.subscriptions));
-  localStorage.setItem('preferences', JSON.stringify(state.preferences));
   localStorage.setItem('user', JSON.stringify(state.user));
+  localStorage.setItem('preferences', JSON.stringify(state.preferences));
+  localStorage.setItem('subscriptions', JSON.stringify(state.subscriptions));
+  localStorage.setItem('notifications', JSON.stringify(state.notifications));
+  localStorage.setItem('exchangeRates', JSON.stringify(state.exchangeRates));
+  localStorage.setItem('servicePopularity', JSON.stringify(state.servicePopularity));
 };
 
 const addSubscription = (sub) => {
@@ -1579,18 +1629,11 @@ const renderAdd = (container) => {
     <h4 style="color: var(--text-secondary); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 20px; text-transform: uppercase; opacity: 0.8">${t('popularServices')}</h4>
     
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px">
-      ${[
-      { name: 'Netflix', price: 15.99, color: '#E50914', cat: 'Entertainment', logo: 'netflix.png' },
-      { name: 'Spotify', price: 9.99, color: '#1DB954', cat: 'Entertainment', logo: 'spotify.png' },
-      { name: 'iCloud', price: 9.99, color: '#007AFF', cat: 'Software', logo: 'icloud.png' },
-      { name: 'Disney+', price: 13.99, color: '#006E99', cat: 'Entertainment', logo: 'disney.png' },
-      { name: 'Amazon', price: 14.99, color: '#FF9900', cat: 'Shopping', logo: 'amazon.png' },
-      { name: 'Adobe', price: 52.99, color: '#FF021B', cat: 'Software', logo: 'adobe.png' },
-      { name: 'YouTube', price: 13.99, color: '#FF0000', cat: 'Entertainment', logo: 'youtube.png' },
-      { name: 'Slack', price: 12.50, color: '#4A154B', cat: 'Software', logo: 'slack.png' },
-      { name: 'Coinbase', price: 0.00, color: '#0052FF', cat: 'Finance', logo: 'coinbase.png' },
-      { name: 'Tesla', price: 9.99, color: '#E31937', cat: 'Auto', logo: 'tesla.png' }
-    ].map(p => `
+      ${PRESET_SERVICES
+      .map(p => ({ ...p, usage: state.servicePopularity[p.name] || 0 }))
+      .sort((a, b) => b.usage - a.usage)
+      .slice(0, 8)
+      .map(p => `
         <div class="preset-card" data-name="${p.name}" data-price="${p.price}" data-color="${p.color}" data-icon="${p.name.charAt(0)}" data-category="${p.cat}" style="background:var(--card-bg); border: 1px solid var(--border-color); border-radius:20px; height:100px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; cursor:pointer; overflow:hidden; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); box-shadow: 0 4px 20px rgba(0,0,0,0.15)">
           <div style="width: 48px; height: 48px; background-image: url('${p.logo}?v=edge'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2)"></div>
           <div style="font-size:11px; font-weight:500; color: var(--text-primary); opacity: 0.9">${p.name}</div>
@@ -1611,6 +1654,11 @@ const renderAdd = (container) => {
     card.addEventListener('click', () => {
       const { name, price, color, icon, category } = card.dataset;
       state.selectedPreset = { name, price: parseFloat(price), color, icon, category };
+
+      // Increment popularity
+      state.servicePopularity[name] = (state.servicePopularity[name] || 0) + 1;
+      saveState();
+
       navigate('add-custom');
     });
   });
